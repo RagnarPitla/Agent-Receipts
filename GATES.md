@@ -88,7 +88,7 @@ project exists to catch.
 - [ ] E1: the probes have been run against a live Copilot Studio environment and the transcript published
   CHECK: grep -m1 'PROOF' evidence/live-tenant-run.txt
   EXPECT: PROOF OK
-  EVIDENCE: pending (last attempt: FAILED | exit=2 | expect=not found | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=12 | at=2026-08-31T03:02:53.631Z)
+  EVIDENCE: pending (last attempt: FAILED | exit=2 | expect=not found | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=28 | at=2026-08-31T03:05:56.441Z)
 
 ## Outcomes only a person can close
 

@@ -13,7 +13,7 @@ OUT = SITE / "index.html"
 REPO = "https://github.com/RagnarPitla/Agent-Receipts"
 URL = "https://ragnarpitla.github.io/Agent-Receipts/"
 
-HERO_SVG = """<svg viewBox="0 0 520 400" role="img" aria-label="A contrast between two ways of closing a task. On the left, a single ticked checkbox sits alone with nothing underneath it, labelled the agent's word. On the right, the same checkbox has a command, an expected string and a recorded result hanging beneath it on a solid spine, labelled the evidence. A dashed vertical rule separates the two.">
+HERO_SVG = """<svg viewBox="0 0 545 400" role="img" aria-label="A contrast between two ways of closing a task. On the left, a single ticked checkbox sits alone with nothing underneath it, labelled the agent's word. On the right, the same checkbox has a command, an expected string and a recorded result hanging beneath it on a solid spine, labelled the evidence. A dashed vertical rule separates the two.">
   <text x="128" y="34" text-anchor="middle" fill="#737373" font-size="12" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">THE AGENT'S WORD</text>
 
   <rect x="98" y="70" width="60" height="60" rx="10" fill="none" stroke="#0a0a0a" stroke-width="2.5"/>
@@ -30,23 +30,23 @@ HERO_SVG = """<svg viewBox="0 0 520 400" role="img" aria-label="A contrast betwe
 
   <line x1="260" y1="24" x2="260" y2="376" stroke="#e5e5e5" stroke-width="1.5" stroke-dasharray="4 5"/>
 
-  <text x="392" y="34" text-anchor="middle" fill="#737373" font-size="12" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">THE EVIDENCE</text>
+  <text x="400" y="34" text-anchor="middle" fill="#737373" font-size="12" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">THE EVIDENCE</text>
 
-  <rect x="362" y="70" width="60" height="60" rx="10" fill="none" stroke="#0a0a0a" stroke-width="2.5"/>
-  <path d="M376 100 L388 112 L410 86" stroke="#0a0a0a" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="290" y="70" width="60" height="60" rx="10" fill="none" stroke="#0a0a0a" stroke-width="2.5"/>
+  <path d="M304 100 L316 112 L338 86" stroke="#0a0a0a" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <path d="M392 130 V300" stroke="#0a0a0a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M320 130 V300" stroke="#0a0a0a" stroke-width="3" fill="none" stroke-linecap="round"/>
 
-  <polygon points="392,164 400,172 392,180 384,172" fill="#0a0a0a"/>
-  <text x="418" y="177" fill="#0a0a0a" font-size="13" font-weight="650">a command</text>
+  <polygon points="320,164 328,172 320,180 312,172" fill="#0a0a0a"/>
+  <text x="346" y="177" fill="#0a0a0a" font-size="13" font-weight="650">a command</text>
 
-  <polygon points="392,224 400,232 392,240 384,232" fill="#0a0a0a"/>
-  <text x="418" y="237" fill="#0a0a0a" font-size="13" font-weight="650">a string it must print</text>
+  <polygon points="320,224 328,232 320,240 312,232" fill="#0a0a0a"/>
+  <text x="346" y="237" fill="#0a0a0a" font-size="13" font-weight="650">a string it must print</text>
 
-  <polygon points="392,284 400,292 392,300 384,292" fill="#0a0a0a"/>
-  <text x="418" y="297" fill="#0a0a0a" font-size="13" font-weight="650">what it actually printed</text>
+  <polygon points="320,284 328,292 320,300 312,292" fill="#0a0a0a"/>
+  <text x="346" y="297" fill="#0a0a0a" font-size="13" font-weight="650">what it actually printed</text>
 
-  <text x="392" y="352" text-anchor="middle" fill="#737373" font-size="13">checkable by someone who was not there</text>
+  <text x="400" y="352" text-anchor="middle" fill="#737373" font-size="13">checkable by someone who was not there</text>
 </svg>"""
 
 PROBLEM_BODY = """<p>You asked the agent to deploy a skill to a Copilot Studio agent. It ran
