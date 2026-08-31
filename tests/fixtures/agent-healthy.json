@@ -1,0 +1,30 @@
+{
+  "bot": {
+    "name": "Bank Reconciliation Advisor",
+    "schemaname": "cr023_bankReconciliationAdvisor",
+    "configuration": "{\"recognizer\":{\"kind\":\"CLICopilotRecognizer\"},\"agentSettings\":{\"instructions\":\"You help finance users reconcile bank statements in Dynamics 365. Always confirm before proposing a posting. Never post to the ledger yourself.\"}}"
+  },
+  "components": [
+    {
+      "botcomponentid": "11111111-1111-1111-1111-111111111111",
+      "schemaname": "cr023_bankReconciliationAdvisor.skill.match-exception-explainer_a1b",
+      "componenttype": 9,
+      "description": "Explain why a bank statement line did not match",
+      "data": "kind: InlineAgentSkill\ncontent: |\n  ---\n  name: match-exception-explainer\n  description: Explain why a bank statement line did not auto-match and what to do next.\n  ---\n\n  # Match exception explainer\n\n  ## When to use this skill\n  Use this skill when a user asks why a bank statement line did not match.\n\n  ## Required inputs\n  - statement line id\n  - bank account\n\n  If the user has not provided a statement line id, ask for it before continuing.\n\n  ## Steps\n  1. Read the statement line.\n  2. Compare against open ledger transactions.\n  3. Classify the no-match reason.\n\n  ## Confirmation\n  Never post or modify a transaction. Confirm with the user before proposing any change.\n\n  ## Output\n  Return the reason, the evidence considered, and the recommended next action.\n\n  ## On failure\n  If the statement line cannot be read, say so plainly and escalate to the bank reconciliation owner.\n"
+    },
+    {
+      "botcomponentid": "22222222-2222-2222-2222-222222222222",
+      "schemaname": "cr023_bankReconciliationAdvisor.knowledge.recon-policy_c3d",
+      "componenttype": 9,
+      "description": "Reconciliation policy knowledge",
+      "data": "kind: KnowledgeSourceConfiguration\nsource: dataverse\n"
+    },
+    {
+      "botcomponentid": "33333333-3333-3333-3333-333333333333",
+      "schemaname": "cr023_bankReconciliationAdvisor.tool.get-statement-line_e5f",
+      "componenttype": 9,
+      "description": "Read a bank statement line",
+      "data": "kind: McpTool\nendpoint: d365fo\n"
+    }
+  ]
+}

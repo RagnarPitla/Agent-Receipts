@@ -1,0 +1,26 @@
+node_modules/
+.DS_Store
+*.log
+
+# Evidence written by `receipts check`. Runs are machine- and time-specific, so
+# they are kept out of git by default. Commit a run deliberately when you want
+# it attached to a pull request as proof.
+evidence/*
+!evidence/.gitkeep
+
+# Approvals live in ~/.agent-receipts/approved by default, and approvalDir() in
+# src/approval.mjs throws if the store resolves inside the working repository.
+# So nothing below should ever appear here. These entries exist so that if
+# someone points RECEIPTS_APPROVAL_DIR somewhere careless, a stray approval
+# still does not reach a commit.
+.agent-receipts/
+approvals.json
+*.approval.json
+
+# Local environment pointers. Never commit an environment URL or a bot id.
+.env
+.env.*
+
+# Python bytecode from site/fill.py and site/validate.py.
+__pycache__/
+*.pyc

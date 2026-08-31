@@ -1,0 +1,754 @@
+<!doctype html>
+<!--
+  Agent Receipts landing page.
+
+  Built with the github-pages-landing skill. Dependency-free static HTML:
+  no framework, no CDN, no hosted fonts, no build step. Relative paths only,
+  because the site is served from /Agent-Receipts/.
+
+  Every number on this page was read off a real run, and every citation is in
+  docs/sources.md along with the claims I could not verify and therefore did
+  not make. The one honest gap - no recorded run against a live tenant yet -
+  is marked pending in the proof section rather than hidden, which is the
+  standard this tool applies to a ticked checkbox.
+
+  Do not hand-edit index.html. Content lives in site/fill.py; run it to
+  regenerate index.html from this template.
+
+  Validate before shipping:  python3 site/validate.py site
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agent Receipts - Agent Receipts makes a Copilot Studio agent prove it finished, by checking the agent instead of the log.</title>
+<meta name="description" content="Agents stop early and report done. Agent Receipts turns every outcome into a gate with a command behind it, reads the live Copilot Studio agent rather than the deployment log, and reports a ticked box with no evidence as unmet. MIT licensed, zero dependencies, read-only.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Open Graph. og:url and og:image must be absolute; everything else relative. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Agent Receipts">
+<meta property="og:title" content="Agent Receipts - Agent Receipts makes a Copilot Studio agent prove it finished, by checking the agent instead of the log.">
+<meta property="og:description" content="Agents stop early and report done. Agent Receipts turns every outcome into a gate with a command behind it, reads the live Copilot Studio agent rather than the deployment log, and reports a ticked box with no evidence as unmet. MIT licensed, zero dependencies, read-only.">
+<meta property="og:url" content="https://ragnarpitla.github.io/Agent-Receipts/">
+<meta property="og:image" content="https://ragnarpitla.github.io/Agent-Receipts/assets/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Agent Receipts: Agent Receipts makes a Copilot Studio agent prove it finished, by checking the agent instead of the log.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Agent Receipts - Agent Receipts makes a Copilot Studio agent prove it finished, by checking the agent instead of the log.">
+<meta name="twitter:description" content="Agents stop early and report done. Agent Receipts turns every outcome into a gate with a command behind it, reads the live Copilot Studio agent rather than the deployment log, and reports a ticked box with no evidence as unmet. MIT licensed, zero dependencies, read-only.">
+<meta name="twitter:image" content="https://ragnarpitla.github.io/Agent-Receipts/assets/og-card.png">
+<meta name="twitter:image:alt" content="Agent Receipts: Agent Receipts makes a Copilot Studio agent prove it finished, by checking the agent instead of the log.">
+
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="./assets/site.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="container">
+    <a class="wordmark" href="#top">
+      <img class="wordmark-icon" src="./assets/favicon.svg" alt="" width="22" height="22">
+      <span class="mark">Agent Receipts</span>
+      <span class="strap">proof of work for Copilot Studio agents</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#proof">Proof</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="https://github.com/RagnarPitla/Agent-Receipts">GitHub</a></li>
+        <li><a class="cta" href="https://github.com/RagnarPitla/Agent-Receipts#quick-start">Quick start</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+  <!-- ============================================================= HERO -->
+  <section class="hero" id="top" aria-labelledby="hero-heading">
+    <div class="container">
+      <div class="hero-copy">
+        <p class="hero-kicker badge"><img src="./assets/favicon.svg" alt="" width="12" height="12">Agent Receipts</p>
+        <h1 id="hero-heading">Agents cut corners quietly. Catch it before your users do.</h1>
+        <p class="sub-line">Every outcome your Copilot Studio agent has to deliver becomes a line in a ledger with a real command behind it. <strong>A ticked box whose evidence still reads pending is reported as unmet</strong>, so an agent cannot close a gate by saying it did. The checks read the live agent, not the deployment log that told you it worked.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="https://github.com/RagnarPitla/Agent-Receipts#quick-start">Quick start</a>
+          <a class="btn ghost" href="https://github.com/RagnarPitla/Agent-Receipts">View the code on GitHub</a>
+        </div>
+        <p class="microcopy">
+          MIT licensed<span class="sep">*</span>Zero dependencies<span class="sep">*</span>Read-only against your tenant
+        </p>
+      </div>
+      <div class="hero-art">
+        <!--
+          Hand-authored SVG only. The aria-label must describe what the
+          diagram shows, not what it is called, because it is the only thing
+          a screen reader gets. See references/SVG-ART.md.
+        -->
+        <svg viewBox="0 0 520 400" role="img" aria-label="A contrast between two ways of closing a task. On the left, a single ticked checkbox sits alone with nothing underneath it, labelled the agent's word. On the right, the same checkbox has a command, an expected string and a recorded result hanging beneath it on a solid spine, labelled the evidence. A dashed vertical rule separates the two.">
+  <text x="128" y="34" text-anchor="middle" fill="#737373" font-size="12" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">THE AGENT'S WORD</text>
+
+  <rect x="98" y="70" width="60" height="60" rx="10" fill="none" stroke="#0a0a0a" stroke-width="2.5"/>
+  <path d="M112 100 L124 112 L146 86" stroke="#0a0a0a" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g stroke="#e5e5e5" stroke-width="2" fill="none" stroke-dasharray="5 5">
+    <path d="M128 130 V300"/>
+  </g>
+  <polygon points="128,200 135,207 128,214 121,207" fill="#e5e5e5"/>
+  <polygon points="128,250 135,257 128,264 121,257" fill="#e5e5e5"/>
+
+  <text x="128" y="330" text-anchor="middle" fill="#737373" font-size="13">nothing underneath it</text>
+  <text x="128" y="352" text-anchor="middle" fill="#737373" font-size="13">but the claim itself</text>
+
+  <line x1="260" y1="24" x2="260" y2="376" stroke="#e5e5e5" stroke-width="1.5" stroke-dasharray="4 5"/>
+
+  <text x="392" y="34" text-anchor="middle" fill="#737373" font-size="12" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">THE EVIDENCE</text>
+
+  <rect x="362" y="70" width="60" height="60" rx="10" fill="none" stroke="#0a0a0a" stroke-width="2.5"/>
+  <path d="M376 100 L388 112 L410 86" stroke="#0a0a0a" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <path d="M392 130 V300" stroke="#0a0a0a" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <polygon points="392,164 400,172 392,180 384,172" fill="#0a0a0a"/>
+  <text x="418" y="177" fill="#0a0a0a" font-size="13" font-weight="650">a command</text>
+
+  <polygon points="392,224 400,232 392,240 384,232" fill="#0a0a0a"/>
+  <text x="418" y="237" fill="#0a0a0a" font-size="13" font-weight="650">a string it must print</text>
+
+  <polygon points="392,284 400,292 392,300 384,292" fill="#0a0a0a"/>
+  <text x="418" y="297" fill="#0a0a0a" font-size="13" font-weight="650">what it actually printed</text>
+
+  <text x="392" y="352" text-anchor="middle" fill="#737373" font-size="13">checkable by someone who was not there</text>
+</svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================== PROBLEM -->
+  <section class="prose-section" id="problem" aria-labelledby="problem-heading">
+    <div class="container">
+      <h2 id="problem-heading">The afternoon you lose to a green success message</h2>
+      <p>You asked the agent to deploy a skill to a Copilot Studio agent. It ran
+      <code>pac copilot push</code>. The command printed a success line and exited zero. The agent
+      reported the deployment complete, because from where it was standing the deployment was
+      complete.</p>
+
+      <p>Then the evaluation scores came back mediocre. So you spent an afternoon on the
+      instructions, then on the knowledge sources, then on the topic routing. None of it moved the
+      numbers, because the skill was never on the agent. <code>pac copilot push</code> updates
+      components that already exist. Point it at a new one and it succeeds at doing nothing, and
+      says so in the same green text it uses when it works.</p>
+
+      <p class="muted">That is not a modelling problem and it is not carelessness. The only thing
+      anyone checked was a log line the agent wrote about its own work. Every layer above that
+      inherited the mistake, and the layer that could have caught it - reading the agent in the
+      environment and comparing it to what was supposed to be there - is the one nobody ran,
+      because nothing asked them to.</p>
+
+      <figure class="figure">
+        <div class="diagram">
+          <svg viewBox="0 0 900 300" role="img" aria-label="Two paths compared. Along the top, an agent runs a push command, reads the success line it printed, marks the task done, and the outcome is a skill that was never deployed. Along the bottom, the same push runs, then a probe reads the components on the live agent, compares them to the source files, and either records evidence or fails the gate. A dashed rule separates the two paths.">
+            <text x="30" y="28" fill="#737373" font-size="12" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">WHAT HAPPENS NOW</text>
+
+            <rect x="30" y="46" width="150" height="46" rx="7" fill="none" stroke="#737373" stroke-width="2"/>
+            <text x="105" y="68" text-anchor="middle" font-size="13" font-weight="650" fill="#0a0a0a">pac copilot push</text>
+            <text x="105" y="85" text-anchor="middle" font-size="11" fill="#737373">exits zero</text>
+
+            <path d="M180 69 H208" stroke="#737373" stroke-width="2" fill="none"/>
+            <polygon points="208,65 216,69 208,73" fill="#737373"/>
+
+            <rect x="222" y="46" width="150" height="46" rx="7" fill="none" stroke="#737373" stroke-width="2"/>
+            <text x="297" y="68" text-anchor="middle" font-size="13" font-weight="650" fill="#0a0a0a">read the log</text>
+            <text x="297" y="85" text-anchor="middle" font-size="11" fill="#737373">it says success</text>
+
+            <path d="M372 69 H400" stroke="#737373" stroke-width="2" fill="none"/>
+            <polygon points="400,65 408,69 400,73" fill="#737373"/>
+
+            <rect x="414" y="46" width="150" height="46" rx="7" fill="none" stroke="#737373" stroke-width="2"/>
+            <text x="489" y="68" text-anchor="middle" font-size="13" font-weight="650" fill="#0a0a0a">tick the box</text>
+            <text x="489" y="85" text-anchor="middle" font-size="11" fill="#737373">task closed</text>
+
+            <path d="M564 69 H592" stroke="#737373" stroke-width="2" fill="none"/>
+            <polygon points="592,65 600,69 592,73" fill="#737373"/>
+
+            <rect x="606" y="46" width="264" height="46" rx="7" fill="none" stroke="#e5e5e5" stroke-width="2"/>
+            <text x="738" y="68" text-anchor="middle" font-size="13" font-weight="650" fill="#737373">the skill is not on the agent</text>
+            <text x="738" y="85" text-anchor="middle" font-size="11" fill="#737373">found days later, by a user</text>
+
+            <line x1="30" y1="128" x2="870" y2="128" stroke="#e5e5e5" stroke-width="1.5" stroke-dasharray="4 5"/>
+
+            <text x="30" y="164" fill="#737373" font-size="12" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">WHAT THIS DOES INSTEAD</text>
+
+            <rect x="30" y="182" width="150" height="46" rx="7" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <text x="105" y="204" text-anchor="middle" font-size="13" font-weight="650" fill="#0a0a0a">pac copilot push</text>
+            <text x="105" y="221" text-anchor="middle" font-size="11" fill="#737373">same command</text>
+
+            <path d="M180 205 H208" stroke="#0a0a0a" stroke-width="2" fill="none"/>
+            <polygon points="208,201 216,205 208,209" fill="#0a0a0a"/>
+
+            <rect x="222" y="182" width="150" height="46" rx="7" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <text x="297" y="204" text-anchor="middle" font-size="13" font-weight="650" fill="#0a0a0a">read the agent</text>
+            <text x="297" y="221" text-anchor="middle" font-size="11" fill="#737373">not the log</text>
+
+            <path d="M372 205 H400" stroke="#0a0a0a" stroke-width="2" fill="none"/>
+            <polygon points="400,201 408,205 400,209" fill="#0a0a0a"/>
+
+            <rect x="414" y="182" width="150" height="46" rx="7" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <text x="489" y="204" text-anchor="middle" font-size="13" font-weight="650" fill="#0a0a0a">compare to source</text>
+            <text x="489" y="221" text-anchor="middle" font-size="11" fill="#737373">byte for byte</text>
+
+            <path d="M564 205 H592" stroke="#0a0a0a" stroke-width="2" fill="none"/>
+            <polygon points="592,201 600,205 592,209" fill="#0a0a0a"/>
+
+            <rect x="606" y="182" width="264" height="46" rx="7" fill="none" stroke="#0a0a0a" stroke-width="3"/>
+            <text x="738" y="204" text-anchor="middle" font-size="13" font-weight="650" fill="#0a0a0a">evidence, or the gate fails</text>
+            <text x="738" y="221" text-anchor="middle" font-size="11" fill="#737373">found in seconds, by you</text>
+          </svg>
+        </div>
+        <figcaption>The command does not change. What changes is that something reads the agent
+        afterwards and refuses to take the log's word for it.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ==================================================== HOW IT WORKS -->
+  <section id="how-it-works" aria-labelledby="how-heading">
+    <div class="container">
+      <h2 id="how-heading">How it works</h2>
+      <p class="lede">Four steps, and only the first one costs you anything. The rest is a command you run and a table you paste.</p>
+      <ol class="steps">
+        <li>
+          <h3>Write the outcomes down before the work starts</h3>
+          <p>A ledger is a Markdown file. Each gate is one outcome that has to be true, plus the
+          command that would fail if it were not, plus the string that command has to print.
+          <code>receipts init</code> writes a starter ledger for Copilot Studio or for anything
+          else. Ten minutes, and it is the only ten minutes of overhead in the whole thing.</p>
+        </li>
+        <li>
+          <h3>Run the checks and let them write the evidence</h3>
+          <p><code>receipts check</code> executes each unproven gate, requires exit zero
+          <em>and</em> a match against the expected string, and writes what it actually saw into the
+          file. Nothing else may write that line. If a check fails, the tick is removed rather than
+          left standing next to a failure.</p>
+        </li>
+        <li>
+          <h3>A tick with no evidence is reported as unmet</h3>
+          <p>This is the rule the rest of it hangs off. An agent that ticks a box to look finished
+          gets a worse result than one that leaves it open, because the ledger names the gate
+          self-reported and the run exits non-zero. The cheapest way to look done stops working.</p>
+        </li>
+        <li>
+          <h3>Paste the report into the pull request</h3>
+          <p><code>receipts report</code> emits a Markdown table: every gate, its state, and the
+          evidence behind it. A reviewer who was not in the room can see which outcomes were proven
+          by a machine, which were signed off by a named person, and which are still open.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================================================= JOBS -->
+  <section id="jobs" aria-labelledby="jobs-heading">
+    <div class="container">
+      <h2 id="jobs-heading">Three parts, one job</h2>
+      <p class="lede">They are one thing because they answer one question in sequence: what has to be true, is it actually true, and is the check that says so worth anything.</p>
+      <ul class="jobs">
+        <li>
+          <span class="job-kicker">Ledger</span>
+          <h3>Five states, and only one of them means proven</h3>
+          <p>Open, met, self-reported, attested, abandoned. Attested gates name a person and a date
+          and are counted separately, never as proof, because some outcomes genuinely need a human
+          and pretending otherwise with a grep is worse than admitting it. Abandoned gates carry a
+          reason and make the run exit non-zero, so quitting is allowed but silence is not.</p>
+        </li>
+        <li>
+          <span class="job-kicker">Probe</span>
+          <h3>Eight questions about a Copilot Studio agent, answered by reading the agent</h3>
+          <p>Is the skill really deployed. Do the deployed bytes match the reviewed bytes. Is
+          anything live that nobody reviewed. Is this the harness you assumed. Every probe issues
+          GET requests and nothing else, and every one runs offline against a fixture file so you
+          can wire up CI without a tenant.</p>
+        </li>
+        <li>
+          <span class="job-kicker">Lint</span>
+          <h3>Seven ways to write a check that cannot fail</h3>
+          <p><code>echo "PROOF OK"</code>. A command ending in <code>|| true</code>. An expected
+          string written inside the command being graded. An attestation signed by nobody. Lint
+          names them in the diff, where a reviewer can see the check as well as the tick.</p>
+        </li>
+      </ul>
+      <figure class="figure">
+        <div class="diagram">
+          <svg viewBox="0 0 900 250" role="img" aria-label="The five states a gate can hold. An open gate runs its check and moves to proven when the command exits zero and its output matches the expected string. If the check fails, the tick is removed and the gate returns to open rather than staying ticked next to a failure. A second dashed path leaves the open gate, skips the check entirely, and runs into a stop barrier. Two states sit outside that loop: attested, which a named person signs with a date and which is never counted as proven, and abandoned, which carries a written reason and makes the whole run exit non-zero. A sixth path, ticking the box by hand without evidence, is drawn as a dead end labelled reported as unmet.">
+            <g font-size="13" font-weight="650" text-anchor="middle">
+              <rect x="30" y="60" width="130" height="46" rx="7" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+              <text x="95" y="82" fill="#0a0a0a">[ ] open</text>
+              <text x="95" y="98" fill="#737373" font-size="11" font-weight="400">not done yet</text>
+
+              <rect x="250" y="60" width="150" height="46" rx="7" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+              <text x="325" y="82" fill="#0a0a0a">receipts check</text>
+              <text x="325" y="98" fill="#737373" font-size="11" font-weight="400">runs the command</text>
+
+              <rect x="490" y="60" width="150" height="46" rx="7" fill="none" stroke="#0a0a0a" stroke-width="3"/>
+              <text x="565" y="82" fill="#0a0a0a">[x] proven</text>
+              <text x="565" y="98" fill="#737373" font-size="11" font-weight="400">evidence written</text>
+            </g>
+
+            <g stroke="#0a0a0a" stroke-width="2" fill="none">
+              <path d="M160 83 H240"/>
+              <path d="M400 83 H480"/>
+            </g>
+            <polygon points="240,79 248,83 240,87" fill="#0a0a0a"/>
+            <polygon points="480,79 488,83 480,87" fill="#0a0a0a"/>
+
+            <path d="M325 106 V146 H95 V110" stroke="#737373" stroke-width="2" fill="none" stroke-dasharray="5 4"/>
+            <polygon points="91,110 95,102 99,110" fill="#737373"/>
+            <text x="210" y="166" text-anchor="middle" fill="#737373" font-size="12">check fails, the tick is removed</text>
+
+            <path d="M52 106 V209 H240" stroke="#d4d4d4" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+            <polygon points="240,205 248,209 240,213" fill="#d4d4d4"/>
+
+            <path d="M540 209 H586" stroke="#d4d4d4" stroke-width="2" fill="none" stroke-dasharray="6 4"/>
+            <line x1="592" y1="192" x2="592" y2="226" stroke="#737373" stroke-width="3"/>
+            <line x1="602" y1="192" x2="602" y2="226" stroke="#737373" stroke-width="3"/>
+            <text x="597" y="182" text-anchor="middle" fill="#737373" font-size="11">stops here</text>
+
+            <line x1="680" y1="40" x2="680" y2="210" stroke="#e5e5e5" stroke-width="1.5" stroke-dasharray="4 5"/>
+            <text x="790" y="34" text-anchor="middle" fill="#737373" font-size="11" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">OUTSIDE THE LOOP</text>
+
+            <g font-size="13" font-weight="650" text-anchor="middle">
+              <rect x="715" y="52" width="150" height="46" rx="7" fill="none" stroke="#737373" stroke-width="2"/>
+              <text x="790" y="74" fill="#0a0a0a">[~] attested</text>
+              <text x="790" y="90" fill="#737373" font-size="11" font-weight="400">a named person, dated</text>
+
+              <rect x="715" y="122" width="150" height="46" rx="7" fill="none" stroke="#737373" stroke-width="2"/>
+              <text x="790" y="144" fill="#0a0a0a">[-] abandoned</text>
+              <text x="790" y="160" fill="#737373" font-size="11" font-weight="400">a written reason</text>
+            </g>
+
+            <g font-size="13" font-weight="650" text-anchor="middle">
+              <rect x="250" y="186" width="290" height="46" rx="7" fill="none" stroke="#e5e5e5" stroke-width="2" stroke-dasharray="6 4"/>
+              <text x="395" y="208" fill="#737373">[x] ticked by hand, evidence pending</text>
+              <text x="395" y="224" fill="#737373" font-size="11" font-weight="400">reported as unmet - a dead end, not a shortcut</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>Only the box on the far right means proven. Attested and abandoned are counted
+        separately and never folded into that number, and the dashed box at the bottom is the one an
+        agent reaches for when it wants to look finished.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================================================ PROOF -->
+  <section class="band" id="proof" aria-labelledby="proof-heading">
+    <div class="container">
+      <h2 id="proof-heading">What it looks like when it catches something</h2>
+      <p class="lede">Both transcripts below are copied from real runs in this repository. You can reproduce the second one in about thirty seconds with no tenant and no credentials.</p>
+      <div class="proof-grid">
+        <div class="demo-panel">
+          <p class="demo-label">receipts status GATES.md</p>
+          <p class="demo-intro">Four gates and one honest gap. The first row was ticked by hand and is reported as unmet anyway.</p>
+          <ul class="spec-list">
+            <li class="is-main">
+              <span class="key">[!]</span>
+              <span class="name">D1: the skill is on the agent<span class="tag">self-reported</span></span>
+              <span class="meta">counts as unmet</span>
+            </li>
+            <li>
+              <span class="key">[x]</span>
+              <span class="name">Q1: every skill answers the seven questions</span>
+              <span class="meta">proven</span>
+            </li>
+            <li>
+              <span class="key">[~]</span>
+              <span class="name">H1: a named reviewer ran the three journeys</span>
+              <span class="meta">attested</span>
+            </li>
+            <li>
+              <span class="key">[ ]</span>
+              <span class="name">Q2: every skill is covered by an evaluation</span>
+              <span class="meta">open</span>
+            </li>
+            <li class="is-pending">
+              <span class="key">live</span>
+              <span class="name">no run against a real tenant is recorded here yet</span>
+              <span class="meta">not yet done</span>
+            </li>
+          </ul>
+        </div>
+        <div class="proof-copy">
+          <p>That is real output from <code>receipts status</code>, not a mock-up. Gate D1 was
+          ticked. Its evidence line still read <code>pending</code>, so the ledger reports it as
+          unmet and names it self-reported, and the whole run exits 1.</p>
+
+          <div class="terminal">
+<pre><span class="prompt">$</span> receipts status GATES.md
+  [!] D1: the skill is on the agent in the environment
+      SELF-REPORTED. The box is ticked and the evidence is still pending.
+      This counts as unmet. An empty box is more honest than this one.
+  [x] Q1: every skill answers the seven questions
+  [~] H1: a named reviewer ran the three journeys that matter
+      attested by Priya Nair priya@contoso.com on 2026-08-14
+  [ ] Q2: every skill is covered by an evaluation case
+
+  proven 1   attested 1   open 1   self-reported 1   abandoned 0   of 4
+
+  NOT MET</pre>
+          </div>
+
+          <p>And here is the push trap caught in the act. The deployment reported success. The
+          probe read the agent and found nothing there.</p>
+
+          <div class="terminal">
+<pre><span class="prompt">$</span> receipts probe skill-deployed --path ./skills \
+    --fixture tests/fixtures/agent-push-trap.json
+PROOF FAIL 2 skill(s) named in the ledger are not on the agent
+  expected: match-exception-explainer, weak-skill
+  on agent: (none)
+  MISSING: match-exception-explainer
+      &lt;- push reported success; the component does not exist
+  MISSING: weak-skill
+      &lt;- push reported success; the component does not exist</pre>
+          </div>
+
+          <div class="stat-row">
+            <div class="stat"><b>35</b><span>tests, all passing, no network</span></div>
+            <div class="stat"><b>8</b><span>Copilot Studio probes</span></div>
+            <div class="stat"><b>7</b><span>always-passing check patterns caught</span></div>
+            <div class="stat"><b>0</b><span>runtime dependencies</span></div>
+            <div class="stat"><b>0</b><span>write calls in any probe</span></div>
+          </div>
+
+          <p class="muted">Every number above comes from a file you can read. 35 is what
+          <code>node tests/run.mjs</code> prints. 8 is the probe table in
+          <code>src/probes/index.mjs</code>. 7 is the rule list in <code>src/lint.mjs</code>. 0
+          dependencies is the empty <code>dependencies</code> block in <code>package.json</code>.
+          The last 0 is a grep for POST, PATCH, PUT and DELETE across <code>src/probes/</code>,
+          which is the claim most worth checking yourself before you point this at a tenant.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= COMPARISON -->
+  <section id="different" aria-labelledby="different-heading">
+    <div class="container">
+      <h2 id="different-heading">Where this sits next to what Microsoft already ships</h2>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h3>Compared with Copilot Studio's built-in evaluation</h3>
+          <p>General quality is a genuinely useful signal and you should turn it on. It scores
+          relevance, groundedness, completeness and abstention, and it flags a response when any one
+          of the four is not met. On the GitHub Copilot harness it is also the only test method
+          available - and Microsoft's own documentation says it "doesn't compare responses to
+          expected answers". That works exactly until the question is whether your match exception
+          skill returned the right exception, or whether it was ever deployed at all. Those are not
+          quality judgements. They are facts, and a fact needs a different instrument.</p>
+        </div>
+        <div class="compare-card">
+          <h3>Compared with Azure AI Foundry's agent evaluators</h3>
+          <p>Microsoft already named this failure mode and built for it. Foundry ships a
+          <code>Task Completion</code> evaluator defined as "a usable deliverable that meets all
+          user requirements", and a <code>Response Completeness</code> evaluator for "not missing
+          critical information". They are good, and this project is not an argument that nobody
+          thought of it. The boundary is where they run: offline, in Foundry, behind a judge model
+          deployment and an SDK. None of that is available inside a Copilot Studio agent on the
+          GitHub Copilot harness, inside Cowork, or inside Scout, which is where the work actually
+          happens.</p>
+        </div>
+      </div>
+      <p class="compare-close"><strong>The check exists; it is just not available where the work runs.</strong> This is a small local tool that puts it there, on the surface you are actually building on, today.</p>
+    </div>
+  </section>
+
+  <!-- ======================================================= ASSURANCES -->
+  <section class="prose-section band" id="assurances" aria-labelledby="assurances-heading">
+    <div class="container">
+      <h2 id="assurances-heading">What it does, and what it deliberately does not</h2>
+      <p>This runs shell commands that an agent proposed, against environments that
+      matter. That deserves a straight account of where the edges are.</p>
+
+      <p>The eight probes issue GET requests and nothing else. There is no code path in
+      <code>src/probes/</code> that issues POST, PATCH, PUT or DELETE, and no flag that would let
+      you make one. A probe can tell you a skill is missing; it cannot deploy it. Verification that
+      can mutate the thing it is verifying is not verification.</p>
+
+      <p>Checks are approved once, and the approval is bound to the exact command, the expected
+      string, the working directory, the shell, the timeout, the platform and the PATH. Change any
+      one and the approval no longer applies, so approving <code>npm test</code> does not approve
+      <code>npm test &amp;&amp; curl -X POST ...</code>, and does not approve the same
+      <code>npm test</code> run somewhere else where it means something different. The approval
+      store lives outside the repository at <code>~/.receipts/approvals.json</code>, mode 0600,
+      because an approval that arrives with <code>git pull</code> is a decision someone else made
+      on your behalf.</p>
+
+      <p>What it does not do, stated plainly. It does not sandbox the command: an approved check
+      runs with your privileges, and the prompt showing you the full command is where that decision
+      gets made. It does not stop a determined author from writing a check that always passes -
+      lint catches seven common shapes and someone who wants to fake a gate can write an eighth.
+      The defence there is that the check sits in the diff next to the tick, where a reviewer can
+      read it. It does not re-verify evidence retroactively, so <code>status</code> reports the age
+      of every piece and you re-run before you merge.</p>
+      <figure class="figure">
+        <div class="diagram">
+          <svg viewBox="0 0 760 252" role="img" aria-label="An ownership split. On the left, this project owns the ledger file in your repository, the evidence it writes, the approval store on your own machine, and the report pasted into a pull request. On the right, the platform owns the agent runtime, the environment and Dataverse state, publishing, and governance and data loss prevention policy. A dashed vertical line marks the boundary, and the project only ever reads across it.">
+            <text x="180" y="26" text-anchor="middle" fill="#737373" font-size="11" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">THIS PROJECT WRITES</text>
+            <text x="570" y="26" text-anchor="middle" fill="#737373" font-size="11" font-weight="700" letter-spacing="0.08em" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">THE PLATFORM OWNS</text>
+
+            <line x1="380" y1="16" x2="380" y2="244" stroke="#737373" stroke-width="1.5" stroke-dasharray="4 5"/>
+
+            <g font-size="13" fill="#0a0a0a">
+              <polygon points="46,58 53,65 46,72 39,65" fill="#0a0a0a"/>
+              <text x="68" y="70">GATES.md in your repository</text>
+              <polygon points="46,98 53,105 46,112 39,105" fill="#0a0a0a"/>
+              <text x="68" y="110">the evidence lines it records</text>
+              <polygon points="46,138 53,145 46,152 39,145" fill="#0a0a0a"/>
+              <text x="68" y="150">approvals, on your machine only</text>
+              <polygon points="46,178 53,185 46,192 39,185" fill="#0a0a0a"/>
+              <text x="68" y="190">the table you paste into a PR</text>
+            </g>
+
+            <g font-size="13" fill="#737373">
+              <polygon points="416,58 423,65 416,72 409,65" fill="#e5e5e5"/>
+              <text x="438" y="70">the agent runtime</text>
+              <polygon points="416,98 423,105 416,112 409,105" fill="#e5e5e5"/>
+              <text x="438" y="110">environment and Dataverse state</text>
+              <polygon points="416,138 423,145 416,152 409,145" fill="#e5e5e5"/>
+              <text x="438" y="150">publishing</text>
+              <polygon points="416,178 423,185 416,192 409,185" fill="#e5e5e5"/>
+              <text x="438" y="190">governance and DLP policy</text>
+            </g>
+
+            <rect x="288" y="208" width="188" height="20" fill="var(--card)"/>
+            <text x="382" y="222" text-anchor="middle" fill="#0a0a0a" font-size="12" font-weight="650">reads across, never writes</text>
+            <path d="M258 234 H494" stroke="#0a0a0a" stroke-width="2" fill="none"/>
+            <polygon points="494,229 504,234 494,239" fill="#0a0a0a"/>
+          </svg>
+        </div>
+        <figcaption>Everything on the right is read and never written. That is the line the tool
+        does not cross, and it is a one-line grep to hold it to that.</figcaption>
+      </figure>
+      <ul class="assurance-list">
+        <li>
+
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Zm0 2.2 6 2.2v4.6c0 4-2.6 6.9-6 8-3.4-1.1-6-4-6-8V6.4l6-2.2Z"/></svg>
+          Read-only against your tenant. Zero write calls in any probe, and it is a one-line grep to check.
+        </li>
+        <li>
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Zm0 2.2 6 2.2v4.6c0 4-2.6 6.9-6 8-3.4-1.1-6-4-6-8V6.4l6-2.2Z"/></svg>
+          No credential is ever written to the ledger, the evidence, or the report.
+        </li>
+        <li>
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Zm0 2.2 6 2.2v4.6c0 4-2.6 6.9-6 8-3.4-1.1-6-4-6-8V6.4l6-2.2Z"/></svg>
+          Every probe runs offline against a fixture file, so CI needs no environment.
+        </li>
+        <li>
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Zm0 2.2 6 2.2v4.6c0 4-2.6 6.9-6 8-3.4-1.1-6-4-6-8V6.4l6-2.2Z"/></svg>
+          Zero runtime dependencies. Node 18 or newer, and nothing else to audit.
+        </li>
+        <li>
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Zm0 2.2 6 2.2v4.6c0 4-2.6 6.9-6 8-3.4-1.1-6-4-6-8V6.4l6-2.2Z"/></svg>
+          MIT licensed. A personal project, not a Microsoft product.
+        </li>
+        <li>
+          <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V5l-8-3Zm0 2.2 6 2.2v4.6c0 4-2.6 6.9-6 8-3.4-1.1-6-4-6-8V6.4l6-2.2Z"/></svg>
+          No telemetry, no network calls the tool makes on its own behalf.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================================== FAQ -->
+  <section id="faq" aria-labelledby="faq-heading">
+    <div class="container">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>Is this saying AI agents are lazy?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>Not as a character flaw, no. The behaviour is real and it has been measured, but calling
+     it laziness gets the mechanism wrong and the fix wrong with it.</p>
+     <p>An agent stops when its own signal says stop. If the signal is a log line saying "success",
+     it stops there, and it is being perfectly reasonable given what it can see. The literature
+     calls this premature disengagement and it shows up as a named pattern across 4,018 SWE-bench
+     trajectories. METR gave an agent 18 real issues in August 2025: it passed 38 percent of the
+     maintainers' own tests, and on manual review none of the 15 pull requests examined were
+     mergeable as they stood. Even the ones that passed every human-written test needed about 26
+     minutes of fixing.</p>
+     <p>So the problem is not effort. It is that the agent's finish line is drawn in the wrong
+     place, and nothing external moves it. This moves it.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>How is this different from turning on agent evaluations?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>They answer different questions and you want both.</p>
+     <p>Evaluations ask whether an answer was good. This asks whether the thing you built is
+     actually there and actually matches what was reviewed. An evaluation running against an agent
+     that silently never received your skill will return numbers, and they will be numbers about
+     the old agent. That is the exact scenario this was written for.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Does it write anything to my Copilot Studio environment?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>No. Every probe issues GET requests. There is no POST, PATCH, PUT or DELETE anywhere in
+     <code>src/probes/</code>, and no flag that adds one.</p>
+     <p>Do not take that on trust, since taking things on trust is what the project is about. Clone
+     it and run <code>grep -rnE "'(POST|PATCH|PUT|DELETE)'" src/probes/</code>. It returns
+     nothing.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Can I try it without a tenant?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>Yes, and this is the fastest way to see what it does. Every probe takes
+     <code>--fixture &lt;file.json&gt;</code> and reads a JSON payload instead of an environment.
+     Two fixtures ship with the repo: one healthy agent and one that reproduces the push trap.</p>
+     <p>The full test suite - 35 tests - runs with no network and no credentials, which is also why
+     it can run in CI on a fork.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>What stops someone writing a check that always passes?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>Partly lint, and partly the pull request.</p>
+     <p><code>receipts lint</code> catches seven shapes: a command that only echoes its own
+     expected string, an expected string written inside the command being graded, a trailing
+     <code>|| true</code> that swallows the exit code, an expectation so short it matches anything,
+     a command that only lists or prints, a check that asks the agent whether it finished, and an
+     attestation with nobody's name on it.</p>
+     <p>That is a heuristic and someone determined will get past it. The structural answer is that
+     the check lives in the diff next to the tick, so a reviewer sees the evidence and the reason
+     to believe it at the same time. A gate closed by a check nobody read is a gate closed by
+     nobody.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Does this only work with Copilot Studio?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>The ledger, the runner, the approval model and the lint rules are platform-neutral. Any
+     project can use them: <code>receipts init --preset generic</code> writes a ledger whose checks
+     are your own build and test commands.</p>
+     <p>The eight probes are Copilot Studio specific, because that is where the sharpest version of
+     the problem lives and where a generic tool has nothing useful to say.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>What about Cowork and Scout?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>Planned, not built, and it would be against the spirit of the project to imply
+     otherwise.</p>
+     <p>The path is real though, and it is short. A skill is a <code>SKILL.md</code> file under an
+     open standard rather than a Microsoft format, which is why the same file can serve all three.
+     Cowork reads up to 50 custom skills from OneDrive at
+     <code>/Documents/Cowork/skills/</code>. Scout discovers skills from
+     <code>~/.copilot/skills/</code>. Both surfaces ship the same sentence in their FAQ: Microsoft
+     does not validate custom skills created by users. So the gap is identical on all three, and
+     one skill file plus a different install path covers it.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Is this a Microsoft product?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>No. It is a personal open-source project, MIT licensed, and views expressed in it are my
+     own and do not represent Microsoft's official position.</p>
+     <p>It is deliberately collegial about the platform. Microsoft has already named this failure
+     mode and shipped evaluators for it in Azure AI Foundry. The argument here is narrower: those
+     evaluators are not available on the surfaces where agents actually run, and something small
+     and local can close that gap today.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>What is not finished?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
+          <div class="faq-answer"><p>The engine, the eight probes, the lint rules and the 35 tests all work today. What does
+     not exist yet: a recorded run against a live tenant published here as evidence, the Cowork and
+     Scout install paths, and a packaged npm release. Those are marked as pending on this page
+     rather than described in the present tense, which is the same standard the tool applies to a
+     ticked box.</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-links">
+      <a href="https://github.com/RagnarPitla/Agent-Receipts">GitHub</a>
+      <a href="https://github.com/RagnarPitla/Agent-Receipts#quick-start">Quick start</a>
+    </div>
+    <p class="footer-credits">Built on Node 18 and nothing else. The SKILL.md format is the Agent Skills open standard. Research citations for every claim on this page are in docs/sources.md in the repository, including the ones I could not verify and therefore did not make.</p>
+    <p class="footer-note">A personal open-source project. Views expressed are my own and do not represent Microsoft's official position.</p>
+
+    <!-- Author block. The two links are fixed across every project; only the bio changes. -->
+    <div class="footer-author">
+      <p class="footer-bio">Built by Ragnar Pitla, a principal program manager and agent developer. He ships AI agents into enterprise systems, and teaches other people to build their own.</p>
+      <div class="connect-links">
+        <a class="connect-link" href="https://www.linkedin.com/in/ragnarpitla" target="_blank" rel="noopener noreferrer">
+          <svg class="connect-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/>
+          </svg>
+          Connect on LinkedIn
+        </a>
+        <a class="connect-link" href="https://rbuild.ai" target="_blank" rel="noopener noreferrer">
+          <svg class="connect-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+            <g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18"/>
+              <path d="M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3z"/>
+            </g>
+          </svg>
+          rbuild.ai
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Copy buttons for terminal blocks. Injected rather than authored into the
+// markup, so a page with JS disabled shows no button it cannot honour.
+// Only prompt lines are copied; command output is never put on the clipboard.
+(function () {
+  if (!navigator.clipboard) return;
+
+  var ICON = '<svg class="copy-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false">'
+    + '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round">'
+    + '<rect x="9" y="9" width="11" height="11" rx="2"/>'
+    + '<path d="M5 15V5a2 2 0 0 1 2-2h10"/></g></svg>';
+
+  Array.prototype.forEach.call(document.querySelectorAll('.terminal'), function (term) {
+    var pre = term.querySelector('pre');
+    if (!pre) return;
+
+    var commands = pre.textContent.split('\n')
+      .filter(function (line) { return line.slice(0, 2) === '$ '; })
+      .map(function (line) { return line.slice(2); })
+      .join('\n');
+    if (!commands) return;
+
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'copy-button';
+    button.setAttribute('aria-label', 'Copy commands to clipboard');
+    button.innerHTML = ICON + '<span class="copy-text">Copy</span>';
+
+    var label = button.querySelector('.copy-text');
+    var timer;
+
+    button.addEventListener('click', function () {
+      navigator.clipboard.writeText(commands).then(function () {
+        window.clearTimeout(timer);
+        label.textContent = 'Copied';
+        button.setAttribute('data-copied', 'true');
+        button.setAttribute('aria-label', 'Commands copied to clipboard');
+        timer = window.setTimeout(function () {
+          label.textContent = 'Copy';
+          button.removeAttribute('data-copied');
+          button.setAttribute('aria-label', 'Copy commands to clipboard');
+        }, 2000);
+      }).catch(function () {
+        label.textContent = 'Press Ctrl C';
+      });
+    });
+
+    term.appendChild(button);
+  });
+})();
+</script>
+
+</body>
+</html>

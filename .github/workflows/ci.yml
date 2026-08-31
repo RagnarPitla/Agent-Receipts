@@ -1,0 +1,92 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 20 is the oldest line still in maintenance. If a change needs a
+        # newer built-in, this matrix is where you find out, not a user.
+        node: ['20', '22', '24']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install
+        # There are no runtime dependencies and no lockfile on purpose, so
+        # there is nothing to install. This step exists to make that explicit
+        # rather than to look like an oversight.
+        run: node -e "const p=require('./package.json'); if (p.dependencies && Object.keys(p.dependencies).length) { console.error('runtime dependencies appeared:', Object.keys(p.dependencies).join(', ')); process.exit(1); } console.log('0 runtime dependencies, nothing to install');"
+
+      - name: Test
+        run: node tests/run.mjs
+
+      - name: The CLI runs from a clean checkout
+        run: |
+          node bin/receipts.mjs --version
+          node bin/receipts.mjs --help > /dev/null
+
+      - name: End to end on a scratch ledger
+        run: |
+          mkdir -p /tmp/scratch && cd /tmp/scratch
+          node "$GITHUB_WORKSPACE/bin/receipts.mjs" init . --preset generic
+          node "$GITHUB_WORKSPACE/bin/receipts.mjs" lint
+          # A fresh ledger has every gate open, so status must exit non-zero.
+          # If this ever exits 0 the whole tool is decorative.
+          if node "$GITHUB_WORKSPACE/bin/receipts.mjs" status; then
+            echo "status exited 0 on a ledger with no evidence"
+            exit 1
+          fi
+          echo "status correctly refused a ledger with no evidence"
+
+  probes-are-read-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No write verbs in any probe
+        # The read-only claim is on the landing page and in docs/security.md.
+        # This is the check that keeps it true.
+        run: |
+          if grep -rniE "method:[[:space:]]*'(POST|PATCH|PUT|DELETE)'|\.(post|patch|put|delete)\(" src/probes/; then
+            echo "a probe gained a write call - the read-only claim is now false"
+            exit 1
+          fi
+          echo "0 write calls in src/probes/"
+
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate the landing page
+        run: python3 site/validate.py site
+
+      - name: index.html matches tools/index.template.html + site/fill.py
+        # index.html is generated. If someone hand-edits it, the next fill
+        # silently reverts their work, so fail here instead.
+        run: |
+          cp site/index.html /tmp/index.committed.html
+          python3 site/fill.py
+          if ! diff -u /tmp/index.committed.html site/index.html; then
+            echo "site/index.html is stale - run 'python3 site/fill.py' and commit the result"
+            exit 1
+          fi
+          echo "site/index.html is in sync with fill.py"

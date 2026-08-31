@@ -1,0 +1,9 @@
+cases:
+  - id: no-match-fx-fee
+    skill: match-exception-explainer
+    input: Why did statement line 4471 not match?
+    expect_contains: foreign exchange fee
+  - id: no-match-missing-ref
+    skill: match-exception-explainer
+    input: Line 5120 is unmatched, what happened?
+    expect_contains: payment reference

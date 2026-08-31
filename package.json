@@ -1,0 +1,38 @@
+{
+  "name": "agent-receipts",
+  "version": "0.1.0",
+  "description": "Due receipts for agents. A proof ledger for Microsoft Copilot Studio agents: every claim about a deployed agent is read back from the environment, not taken from a success message.",
+  "license": "MIT",
+  "author": "Ragnar Pitla",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RagnarPitla/Agent-Receipts.git"
+  },
+  "homepage": "https://ragnarpitla.github.io/Agent-Receipts/",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "receipts": "./bin/receipts.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "SKILL.md"
+  ],
+  "scripts": {
+    "test": "node tests/run.mjs",
+    "receipts": "node bin/receipts.mjs"
+  },
+  "keywords": [
+    "copilot-studio",
+    "microsoft",
+    "agents",
+    "evaluation",
+    "verification",
+    "power-platform",
+    "agent-quality"
+  ]
+}

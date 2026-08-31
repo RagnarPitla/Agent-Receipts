@@ -1,0 +1,16 @@
+{
+  "bot": {
+    "name": "Bank Reconciliation Advisor",
+    "schemaname": "cr023_bankReconciliationAdvisor",
+    "configuration": "{\"recognizer\":{\"kind\":\"CLICopilotRecognizer\"},\"agentSettings\":{\"instructions\":\"You help finance users reconcile bank statements in Dynamics 365.\"}}"
+  },
+  "components": [
+    {
+      "botcomponentid": "22222222-2222-2222-2222-222222222222",
+      "schemaname": "cr023_bankReconciliationAdvisor.knowledge.recon-policy_c3d",
+      "componenttype": 9,
+      "description": "Reconciliation policy knowledge",
+      "data": "kind: KnowledgeSourceConfiguration\nsource: dataverse\n"
+    }
+  ]
+}
