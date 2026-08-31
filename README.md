@@ -216,6 +216,23 @@ Agent Receipts installs into a coding agent as a skill, so Claude Code, GitHub
 Copilot CLI and Codex all read the same rules. `SKILL.md` uses the format the
 Copilot Studio GitHub Copilot harness also accepts.
 
+It is also a valid Agent Spark skill, and that is checked rather than assumed.
+Copy `SKILL.md` to `skills/receipts/SKILL.md` in an Agent Spark checkout and run
+that repository's own validator:
+
+```
+$ node scripts/validate.mjs
+  schema             pass
+  references         pass
+  secrets            pass
+  ascii              pass
+PASSED.
+```
+
+The frontmatter carries every field `schemas/skill.schema.json` requires,
+including `useWhen`, `doNotUseWhen`, `outputs` and `guardrails`. Keep the
+description under 300 characters, which is the limit that validator enforces.
+
 ## Roadmap
 
 Copilot Studio is built and tested. The other two surfaces are on the roadmap and

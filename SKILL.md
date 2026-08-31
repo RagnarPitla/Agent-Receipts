@@ -1,6 +1,72 @@
 ---
 name: receipts
-description: Prove that a Microsoft Copilot Studio agent is actually built and actually deployed, instead of trusting a success message. Use when building, upgrading, reviewing or shipping a Copilot Studio agent, when a push or deploy reported success, when someone asks whether an agent is ready, or when a checklist needs to be closed with evidence rather than opinion.
+description: Prove a Microsoft Copilot Studio agent is actually built and actually deployed rather than trusting a success message. Use when a push or deploy reported success, when someone asks if an agent is ready to publish, or when a checklist is being ticked faster than it is being checked.
+version: 0.1.0
+owner: "@RagnarPitla"
+license: MIT
+provenance: Original work. The ledger format, the probes and the lint rules were written for this repository. Behaviour of Microsoft products is cited in docs/sources.md with the date it was checked, and claims that could not be verified are listed there and are not made.
+maturity: experimental
+reviewBy: "2026-11-30"
+useWhen:
+  - A Copilot Studio agent is about to be called done, published or handed over.
+  - A push or deploy reported success and nobody has read the result back from the environment.
+  - A reviewer is deciding whether an agent is fit to publish.
+  - A long build session is ending and a completion report is about to be written.
+  - A checklist exists and the boxes are being ticked faster than they are being checked.
+doNotUseWhen:
+  - The change is one line and its result is already visible. The ledger costs attention.
+  - There is no environment to read back from and no command that could fail.
+  - Someone wants a green summary rather than an accurate one. This skill will not produce one.
+  - The request is to fix the agent. This reports what is true; it does not repair.
+inputs:
+  - name: ledgerPath
+    type: string
+    required: false
+    description: Path to the GATES.md ledger. Defaults to GATES.md in the repository root.
+  - name: environmentUrl
+    type: string
+    required: false
+    description: Dataverse environment URL for the live probes. Omit to run offline against a fixture.
+    sensitive: false
+  - name: botId
+    type: string
+    required: false
+    description: The bot GUID to probe. Required with environmentUrl.
+tools:
+  - name: receipts
+    access: read
+    requiresConfirmation: false
+    description: Reads and writes the ledger file. Never contacts an environment on its own.
+  - name: dataverse
+    access: read
+    requiresConfirmation: false
+    description: Reads botcomponent rows to check what is actually on the agent. No probe issues a write.
+  - name: shell
+    access: read-write
+    requiresConfirmation: true
+    description: Runs the CHECK command of a gate. Every command must be approved once by a human before it runs, and the approval binds to the exact command text.
+outputs:
+  - name: ledger
+    description: The updated GATES.md, where each closed gate carries the exit code, the matched expectation, a hash of the output and a timestamp.
+    required: true
+  - name: verdict
+    description: MET or NOT MET, with counts for proven, attested, open, self-reported and abandoned. Exit 1 when anything is unproven.
+    required: true
+  - name: report
+    description: A Markdown table for a pull request body, listing every gate and the evidence behind it.
+    required: false
+guardrails:
+  - Never tick a box the tool did not close. A ticked box whose evidence reads pending is reported as unmet and named as self-reported.
+  - Never run a CHECK command that a human has not approved. Approval binds to the exact command text, the gate id and the repository path, and any edit invalidates it.
+  - Never write to a Copilot Studio environment. Probes read only.
+  - Never report a gate as proven on the basis of a deploy log. Read the state back from the environment.
+  - Never invent an expectation that the command cannot fail to produce. If no command can decide the outcome, mark it as an attestation and name the person.
+  - State an unverifiable claim as unverified rather than omitting it or asserting it.
+compatibility:
+  harness:
+    - github-copilot
+    - standard
+  verified: false
 ---
 
 # Receipts
