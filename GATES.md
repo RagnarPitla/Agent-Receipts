@@ -18,39 +18,39 @@ Run it yourself:
 - [x] G1: a ticked box with no evidence is counted as unmet, not as done
   CHECK: out=$(node bin/receipts.mjs status tests/fixtures/ledgers/self-reported.md); rc=$?; printf '%s' "$out"; test $rc -eq 1
   EXPECT: self-reported 1
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=34 | output=sha256:f335cf77bbc40fcc bytes=332 | at=2026-08-31T03:44:14.735Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=684 | output=sha256:f335cf77bbc40fcc bytes=332 | at=2026-08-31T03:53:06.817Z
 
 - [x] G2: a deploy that reports success and creates nothing is caught
   CHECK: out=$(node bin/receipts.mjs probe skill-deployed --path tests/fixtures/skills --fixture tests/fixtures/agent-push-trap.json 2>&1); rc=$?; printf '%s' "$out"; test $rc -eq 1
   EXPECT: push reported success; the component does not exist
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=34 | output=sha256:59d0ce2653fc94be bytes=302 | at=2026-08-31T03:44:14.770Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=52 | output=sha256:59d0ce2653fc94be bytes=302 | at=2026-08-31T03:53:06.872Z
 
 - [x] G3: every shape of a check that cannot fail is still flagged
   CHECK: node bin/receipts.mjs lint tests/fixtures/ledgers/weak-checks.md 2>&1 | grep advisory
   EXPECT: 8 advisory finding(s)
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=58 | output=sha256:333b71a6521089e2 bytes=24 | at=2026-08-31T03:44:14.829Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=80 | output=sha256:333b71a6521089e2 bytes=24 | at=2026-08-31T03:53:06.952Z
 
 - [x] G4: a gate that is already ticked is re-run, so a stale pass cannot survive
   CHECK: d=$(mktemp -d); printf -- '- [x] A1: stale\n  CHECK: printf %s WRONG\n  EXPECT: PROOF OK\n  EVIDENCE: forged\n' > $d/G.md; node bin/receipts.mjs check --approve $d/G.md >/dev/null 2>&1; grep '^- \[ \]' $d/G.md; rm -rf $d
   EXPECT: - [ ] A1: stale
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=64 | output=sha256:0d92746880a2710c bytes=16 | at=2026-08-31T03:44:14.893Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=149 | output=sha256:0d92746880a2710c bytes=16 | at=2026-08-31T03:53:07.102Z
 
 - [x] G5: a gate that could not be run is never reported as met
   CHECK: d=$(mktemp -d); printf -- '- [x] A1: claimed\n  CHECK: printf %s WRONG\n  EXPECT: PROOF OK\n  EVIDENCE: forged\n' > $d/G.md; node bin/receipts.mjs check $d/G.md 2>&1 | grep 'NOT VERIFIED'; rm -rf $d
   EXPECT: NOT VERIFIED - 1 gate(s) did not run
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=55 | output=sha256:f267c991db7a921d bytes=43 | at=2026-08-31T03:44:14.949Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=85 | output=sha256:f267c991db7a921d bytes=43 | at=2026-08-31T03:53:07.188Z
 
 ## The change did not break what already worked
 
 - [x] R1: the test suite passes
   CHECK: node tests/run.mjs 2>&1 | grep 'passed,'
   EXPECT: 37 passed, 0 failed
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=743 | output=sha256:be64a1ff858e9c6c bytes=20 | at=2026-08-31T03:44:15.692Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=852 | output=sha256:be64a1ff858e9c6c bytes=20 | at=2026-08-31T03:53:08.040Z
 
 - [x] R2: it works from a clean clone with nothing installed
   CHECK: rm -rf /tmp/receipts-clean && git clone -q . /tmp/receipts-clean && cd /tmp/receipts-clean && node tests/run.mjs 2>&1 | grep 'passed,'
   EXPECT: 37 passed, 0 failed
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=977 | output=sha256:be64a1ff858e9c6c bytes=20 | at=2026-08-31T03:44:16.670Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=1096 | output=sha256:be64a1ff858e9c6c bytes=20 | at=2026-08-31T03:53:09.136Z
 
 ## The promises made to anyone pointing this at a tenant
 
@@ -60,29 +60,29 @@ they cannot quietly stop being true.
 - [x] S1: no probe can write to an environment
   CHECK: grep -rcniE "method:[[:space:]]*'(POST|PATCH|PUT|DELETE)'|\.(post|patch|put|delete)\(" src/probes/*.mjs | tr '\n' ' '
   EXPECT: dataverse.mjs:0 src/probes/index.mjs:0
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=9 | output=sha256:ad4f35cecc877748 bytes=50 | at=2026-08-31T03:44:16.680Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=10 | output=sha256:ad4f35cecc877748 bytes=50 | at=2026-08-31T03:53:09.146Z
 
 - [x] S2: there is no runtime dependency tree to audit
   CHECK: node -e "const d=Object.keys(require('./package.json').dependencies||{}); console.log(d.length+' runtime dependencies: ['+d.join(',')+']')"
   EXPECT: 0 runtime dependencies: []
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=27 | output=sha256:12a5d2f7f8b9c13f bytes=27 | at=2026-08-31T03:44:16.707Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=27 | output=sha256:12a5d2f7f8b9c13f bytes=27 | at=2026-08-31T03:53:09.173Z
 
 - [x] S3: an approval store inside the repository is refused
   CHECK: RECEIPTS_APPROVAL_DIR=./tmp-approvals node -e "import('./src/approval.mjs').then(m=>{try{m.approvalDir();console.log('store accepted')}catch(e){console.log(e.message)}})"; rm -rf ./tmp-approvals
   EXPECT: resolves inside the working repository
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=34 | output=sha256:61311f99ca066890 bytes=229 | at=2026-08-31T03:44:16.741Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=35 | output=sha256:61311f99ca066890 bytes=229 | at=2026-08-31T03:53:09.209Z
 
 ## The ledger and the published page are honest
 
 - [x] L1: no gate in this file is closed by a check that cannot fail
   CHECK: node bin/receipts.mjs lint GATES.md 2>&1 | grep 'no weak patterns'
   EXPECT: no weak patterns found
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=60 | output=sha256:8bb92e131a1176b4 bytes=25 | at=2026-08-31T03:44:16.801Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=32 | output=sha256:8bb92e131a1176b4 bytes=25 | at=2026-08-31T03:53:09.241Z
 
 - [x] L2: the published page is valid and still matches its generator
   CHECK: cp site/index.html /tmp/committed.html && python3 site/fill.py >/dev/null && diff -q /tmp/committed.html site/index.html && python3 site/validate.py site 2>&1 | tail -1
   EXPECT: All 29 checks passed.
-  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=94 | output=sha256:19348f13756faa7e bytes=22 | at=2026-08-31T03:44:16.896Z
+  EVIDENCE: proven | exit=0 | expect=matched | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=113 | output=sha256:19348f13756faa7e bytes=22 | at=2026-08-31T03:53:09.355Z
 
 ## Not yet proven
 
@@ -98,7 +98,7 @@ project exists to catch.
 - [ ] E1: the probes have been run against a live Copilot Studio environment and the transcript published
   CHECK: grep -m1 'PROOF' evidence/live-tenant-run.txt
   EXPECT: PROOF OK
-  EVIDENCE: pending (last attempt: FAILED | exit=2 | expect=not found | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=7 | at=2026-08-31T03:44:16.904Z)
+  EVIDENCE: pending (last attempt: FAILED | exit=2 | expect=not found | shell=/bin/sh | cwd=/Users/ragnarpitla/Desktop/rbuild-ai/CS-2026/Agent-Receipts | path=bb1a299c0c7a (38 entries) | ms=8 | at=2026-08-31T03:53:09.363Z)
 
 ## Outcomes only a person can close
 
