@@ -6,6 +6,34 @@ All notable changes to this project are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- `check` re-runs gates that are already ticked. It used to skip them, so a
+  gate proven against an older version of the system kept its tick and its
+  stale evidence line was reported as the current result. Running the project's
+  own ledger is what surfaced this: the page validator went from 15 checks to
+  29 and gate L2 still reported proven. `--cached` restores the old skipping
+  for local speed, announces every gate it skipped and the date of the evidence
+  it is trusting, and cannot report success.
+- A gate that could not be executed is no longer counted as met. A ledger of
+  ticked boxes whose commands were never approved previously printed
+  `ALL MET` and exited 0 without running anything, which is the failure this
+  project exists to catch. Such a run now prints `NOT VERIFIED`, names the
+  gates, and exits 1 whatever the boxes on disk say.
+- The site validator sweeps every text file for non-ASCII characters, not just
+  HTML and CSS. A smart quote in an SVG `aria-label` used to ship.
+
+### Added
+
+- `GATES.md` gates G4 and G5, covering the two behaviours above.
+- `site/404.html`, so a mistyped path lands on something that points at the
+  ledger rather than on the default GitHub page.
+
+### Changed
+
+- `--reverify` is gone. Re-running is the default, so the flag it replaced no
+  longer had anything to turn on.
+
 Not yet validated against a live Copilot Studio tenant. Every probe is covered
 by an offline fixture, and the Dataverse shapes those fixtures encode were read
 from documentation and from observed exports rather than from a recorded run in

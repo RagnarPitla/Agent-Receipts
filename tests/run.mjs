@@ -221,13 +221,31 @@ t('--approve is a boolean flag and does not swallow the ledger path', () => {
   if (!/ALL MET/.test(r.out)) throw new Error(r.out);
 });
 
-t('a failed check removes the tick instead of leaving a false one', () => {
+t('a ticked gate is re-run by default, so a stale pass cannot survive', () => {
   const f = join(mkdtempSync(join(tmpdir(), 'dil-')), 'GATES.md');
   writeFileSync(f, `- [x] A1: lied about\n  CHECK: node bin/receipts.mjs probe harness --expect standard --fixture ${FIX}/agent-healthy.json\n  EXPECT: PROOF OK\n  EVIDENCE: proven | exit=0 | expect=matched | forged\n`);
-  cli(['check', '--approve', '--reverify', f], { expectCode: 1 });
+  cli(['check', '--approve', f], { expectCode: 1 });
   const after = readFileSync(f, 'utf8');
   if (!/^- \[ \] A1/m.test(after)) throw new Error(`tick was not removed:\n${after}`);
   if (!/EVIDENCE: pending/.test(after)) throw new Error(`evidence was not reset:\n${after}`);
+});
+
+t('--cached skips a proven gate but says so instead of counting it as fresh', () => {
+  const f = join(mkdtempSync(join(tmpdir(), 'dil-')), 'GATES.md');
+  writeFileSync(f, `- [x] A1: lied about\n  CHECK: node bin/receipts.mjs probe harness --expect standard --fixture ${FIX}/agent-healthy.json\n  EXPECT: PROOF OK\n  EVIDENCE: proven | exit=0 | expect=matched | at=2026-01-01T00:00:00.000Z\n`);
+  const r = cli(['check', '--approve', '--cached', f], { expectCode: 1 });
+  if (!/CACHED\s+A1/.test(r.out)) throw new Error(`skipped gate was not announced:\n${r.out}`);
+  if (!/2026-01-01/.test(r.out)) throw new Error(`evidence date was not surfaced:\n${r.out}`);
+  if (!/NOT VERIFIED/.test(r.out)) throw new Error(`cached run reported success:\n${r.out}`);
+  if (/^- \[ \] A1/m.test(readFileSync(f, 'utf8'))) throw new Error('cached run should not have re-run the check');
+});
+
+t('an unapproved gate cannot be reported as met on the strength of an old tick', () => {
+  const f = join(mkdtempSync(join(tmpdir(), 'dil-')), 'GATES.md');
+  writeFileSync(f, `- [x] A1: claimed\n  CHECK: printf %s WRONG\n  EXPECT: PROOF OK\n  EVIDENCE: proven | exit=0 | expect=matched | at=2020-01-01T00:00:00.000Z\n`);
+  const r = cli(['check', f], { expectCode: 1 });
+  if (/ALL MET/.test(r.out)) throw new Error(`a gate that never ran was reported as met:\n${r.out}`);
+  if (!/NOT VERIFIED/.test(r.out)) throw new Error(`the unrun gate was not called out:\n${r.out}`);
 });
 
 t('evidence records the oracle result but never the raw output', () => {

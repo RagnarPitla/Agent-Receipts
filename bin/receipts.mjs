@@ -24,7 +24,7 @@ const VERSION = '0.1.0';
 // Flags that never take a value. Without this list, `--approve GATES.md`
 // silently consumes the ledger path as the flag's argument and the command
 // then reports "no ledger at GATES.md".
-const BOOLEAN_FLAGS = new Set(['approve', 'reverify', 'strict', 'help', 'version']);
+const BOOLEAN_FLAGS = new Set(['approve', 'cached', 'strict', 'help', 'version']);
 
 function parseArgs(argv) {
   const flags = {};
@@ -45,7 +45,7 @@ function parseArgs(argv) {
 const HELP = `Agent Receipts ${VERSION} - proof of work for agents.
 
   receipts status <ledger>              read the ledger. Executes nothing, ever.
-  receipts check  <ledger> [--approve] [--reverify] [--shell <sh>]
+  receipts check  <ledger> [--approve] [--cached] [--shell <sh>]
   receipts lint   <ledger> [--strict]
   receipts report <ledger> [--out <file>]
   receipts init   [dir] [--preset copilot-studio|generic]
@@ -178,13 +178,26 @@ async function main() {
 
   if (cmd === 'check') {
     console.log(`\n${ledger.path}\n`);
-    await runLedger(ledger, {
+    const results = await runLedger(ledger, {
       mode: flags.approve ? 'approve' : 'normal',
-      reverify: !!flags.reverify,
+      cached: !!flags.cached,
       shell: typeof flags.shell === 'string' ? flags.shell : undefined,
     });
     const fresh = parseLedger(target);
-    return outcome(printStatus(fresh));
+    const summary = printStatus(fresh);
+
+    // A gate this run could not execute is not a gate this run proved. Its tick
+    // is a claim from some earlier run against a system that has since changed,
+    // which is the exact thing this tool exists to refuse. This has to be decided
+    // before the verdict is printed, or the run announces success and then takes
+    // it back.
+    const unverified = results.filter((r) => r.skipped).map((r) => r.gate.id);
+    if (unverified.length > 0) {
+      console.log(`\n  NOT VERIFIED - ${unverified.length} gate(s) did not run: ${unverified.join(', ')}`);
+      console.log(`  Their boxes reflect an earlier run, not this one, so this run cannot report success.\n`);
+      return 1;
+    }
+    return outcome(summary);
   }
 
   console.error(`unknown command "${cmd}"\n`);

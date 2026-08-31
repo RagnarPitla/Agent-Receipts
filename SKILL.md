@@ -160,7 +160,7 @@ then approve:
 ```bash
 receipts check GATES.md              # prints unapproved oracles, runs nothing
 receipts check --approve GATES.md    # runs them and writes evidence
-receipts check --reverify GATES.md   # re-runs gates already marked proven
+receipts check --cached GATES.md    # skips gates already proven, and says which
 ```
 
 A gate closes only when the process exits 0 **and** the `EXPECT:` string appears

@@ -153,14 +153,28 @@ function classify(g, path) {
   g.state = STATE.OPEN;
 }
 
-/** Gates that a run should attempt, in ledger order. */
-export function runnableGates(ledger, { reverify = false } = {}) {
+/**
+ * Gates that a run should attempt, in ledger order.
+ *
+ * A run re-executes gates that are already MET. Skipping them would mean
+ * reporting yesterday's evidence as today's result: the system under test can
+ * change without the ledger noticing, which is the exact failure this project
+ * exists to catch. `cached` opts out for speed, and callers that pass it are
+ * expected to say so in their output rather than print a stale pass as proof.
+ */
+export function runnableGates(ledger, { cached = false } = {}) {
   return ledger.gates.filter((g) => {
     if (!g.runnable) return false;
     if (g.state === STATE.ABANDONED) return false;
-    if (g.state === STATE.MET && !reverify) return false;
+    if (g.state === STATE.MET && cached) return false;
     return true;
   });
+}
+
+/** The `at=` timestamp inside an evidence line, or null if it has none. */
+export function evidenceTimestamp(gate) {
+  const m = /\bat=(\S+)/.exec(gate?.fields?.EVIDENCE ?? '');
+  return m ? m[1] : null;
 }
 
 export function summarise(ledger) {

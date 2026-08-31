@@ -258,7 +258,7 @@ policy blocks a read, it reports that. It does not route around it.
 
 | Area | State |
 | --- | --- |
-| ledger engine | working. Parse, evidence, approval, reverify, atomic writes |
+| ledger engine | working. Parse, evidence, approval, re-run, atomic writes |
 | eight Copilot Studio probes | working, live and offline |
 | `lint` | working, seven rules, advisory or strict |
 | `report` | working, Markdown for a pull request |

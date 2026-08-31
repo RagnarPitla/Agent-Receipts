@@ -8,7 +8,7 @@
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
-import { STATE, updateGate, saveLedger } from './ledger.mjs';
+import { STATE, updateGate, saveLedger, runnableGates, evidenceTimestamp } from './ledger.mjs';
 import { approvalKey, isApproved, approve, pathFingerprint } from './approval.mjs';
 
 const DEFAULT_TIMEOUT = 300_000;
@@ -125,14 +125,19 @@ function tail(s, n = 1200) {
 }
 
 export async function runLedger(ledger, opts = {}) {
-  const { reverify = false, log = console.log } = opts;
+  const { cached = false, log = console.log } = opts;
   const results = [];
-  const targets = ledger.gates.filter((g) => {
-    if (!g.runnable) return false;
-    if (g.state === STATE.ABANDONED) return false;
-    if (g.state === STATE.MET && !reverify) return false;
-    return true;
-  });
+  const targets = runnableGates(ledger, { cached });
+
+  if (cached) {
+    for (const g of ledger.gates) {
+      if (g.runnable && g.state === STATE.MET && !targets.includes(g)) {
+        const at = evidenceTimestamp(g);
+        log(`  CACHED  ${g.id}: not re-run, evidence dated ${at ?? 'unknown'}`);
+        results.push({ gate: g, met: false, skipped: 'cached' });
+      }
+    }
+  }
 
   for (const gate of targets) {
     const res = await runGate(ledger, gate, opts);

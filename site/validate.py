@@ -147,6 +147,9 @@ def check_placeholders(html: str, rel: str, r: Report) -> None:
         r.ok(f"{rel}: no template slots left behind")
 
 
+TEXT_SUFFIXES = {".html", ".css", ".svg", ".js", ".json", ".md", ".txt", ".py", ".xml", ".webmanifest"}
+
+
 def check_ascii(text: str, rel: str, r: Report) -> None:
     hits: list[str] = []
     for line_no, line in enumerate(text.splitlines(), 1):
@@ -393,6 +396,22 @@ def main() -> int:
     r = Report(quiet=quiet)
     print(f"Validating {site}\n")
 
+    # The ASCII rule covers the whole site directory, not just the formats with
+    # their own checks below. A smart quote in an SVG aria-label is still
+    # mojibake, and so is one in this file.
+    ascii_files = [
+        p for p in sorted(site.rglob("*"))
+        if p.is_file() and p.suffix.lower() in TEXT_SUFFIXES
+    ]
+    if not ascii_files:
+        r.fail("site: no text files to check for ASCII", str(site))
+    for path in ascii_files:
+        rel = str(path.relative_to(site))
+        try:
+            check_ascii(path.read_text(encoding="utf-8"), rel, r)
+        except UnicodeDecodeError as exc:
+            r.fail(f"{rel}: not valid UTF-8", str(exc))
+
     html_files = sorted(site.rglob("*.html"))
     if not html_files:
         print(f"error: no .html files under {site}")
@@ -402,7 +421,6 @@ def main() -> int:
         rel = str(path.relative_to(site))
         html = path.read_text(encoding="utf-8")
         check_placeholders(html, rel, r)
-        check_ascii(html, rel, r)
         check_relative_paths(html, rel, r)
         check_no_external_assets(html, rel, r)
         check_copy_buttons(html, rel, r)
@@ -416,7 +434,6 @@ def main() -> int:
 
     for css_path in sorted(site.rglob("*.css")):
         css = css_path.read_text(encoding="utf-8")
-        check_ascii(css, str(css_path.relative_to(site)), r)
         if css_path.name == "site.css":
             check_contrast(css, r)
             check_focus_not_removed(css, r)
