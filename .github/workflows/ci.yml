@@ -19,9 +19,9 @@ jobs:
         # newer built-in, this matrix is where you find out, not a user.
         node: ['20', '22', '24']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node }}
 
@@ -55,7 +55,7 @@ jobs:
   probes-are-read-only:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: No write verbs in any probe
         # The read-only claim is on the landing page and in docs/security.md.
@@ -70,7 +70,7 @@ jobs:
   site:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: actions/setup-python@v5
         with:
