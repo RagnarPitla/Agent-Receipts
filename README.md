@@ -248,13 +248,51 @@ policy blocks a read, it reports that. It does not route around it.
 | tests | 35, deterministic, no network |
 | Cowork and Scout adapters | not started |
 
-Node 18 or newer. Zero runtime dependencies.
+Node 20 or newer. Zero runtime dependencies, and CI fails if any appear.
+
+## This repository runs its own ledger
+
+`GATES.md` at the root is real, not a sample. Twelve outcomes, ten of them
+closed by a command whose output is recorded in the file:
+
+```
+$ receipts check GATES.md --approve
+
+  proven 10   attested 0   open 2   self-reported 0   abandoned 0   of 12
+
+  NOT MET
+```
+
+The run exits 1, and it should. Two gates are open:
+
+**E1: the probes have been run against a live Copilot Studio environment and
+the transcript published.** Every probe is covered by an offline fixture, and
+those fixtures encode Dataverse shapes read from documentation and from
+observed exports. No run against a live tenant has been recorded and published
+yet. Ticking E1 before that happens would be the exact failure this project
+exists to catch, so it stays open and this README says so.
+
+**H1: the framing is fair to the platform teams whose work this sits beside.**
+That is a judgement, not a command. It is an attestation gate and it needs a
+name against it.
+
+Read the file, then run it yourself:
+
+```
+node bin/receipts.mjs status GATES.md   # reads only, executes nothing
+node bin/receipts.mjs check  GATES.md   # prints each command for approval
+```
 
 ## Contributing
 
-Behavioural claims need a current source that directly supports them. Executable
-changes need a regression test. Markdown must be ASCII: no em dashes, smart
-quotes, arrows or dingbats, because they render as mojibake in the GitHub UI.
+Full guide in [CONTRIBUTING.md](CONTRIBUTING.md). The short version: behavioural
+claims need a current source that directly supports them, executable changes
+need a regression test, and Markdown must be ASCII, because em dashes, smart
+quotes, arrows and dingbats render as mojibake in the GitHub UI.
+
+Do not open a pull request whose description claims something you have not run.
+
+Security policy and the threat model are in [SECURITY.md](SECURITY.md).
 
 ## Licence
 

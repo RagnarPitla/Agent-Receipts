@@ -418,6 +418,40 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
       &lt;- push reported success; the component does not exist</pre>
           </div>
 
+          <p>The repository runs this on itself. <code>GATES.md</code> at the root is a real
+          ledger, not an example, and this is what it says today. Ten gates are closed by a
+          command. Two are open, so the run exits 1 and the project is not done.</p>
+
+          <div class="terminal">
+<pre><span class="prompt">$</span> receipts check GATES.md --approve
+  [x] G2: a deploy that reports success and creates nothing is caught
+  [x] R2: it works from a clean clone with nothing installed
+  [x] S1: no probe can write to an environment
+  [x] S3: an approval store inside the repository is refused
+  [x] L2: the published page is valid and still matches its generator
+  [ ] E1: the probes have been run against a live Copilot Studio
+          environment and the transcript published
+  [ ] H1: the framing is fair to the platform teams whose work
+          this sits beside
+
+  proven 10   attested 0   open 2   self-reported 0   abandoned 0   of 12
+
+  NOT MET</pre>
+          </div>
+
+          <p><strong>E1 is the honest gap.</strong> Every probe is covered by an offline fixture,
+          and those fixtures encode Dataverse shapes read from documentation and from observed
+          exports. No run against a live tenant has been recorded and published yet. That gate
+          stays open until one is, because closing it with a tick and no evidence is the exact
+          failure this was built to catch. If the page claimed otherwise you would have no reason
+          to believe anything else on it.</p>
+
+          <p class="muted">Each closed gate carries what the run actually saw. G2's evidence line
+          reads <code>proven | exit=0 | expect=matched | shell=/bin/sh | path=bb1a299c0c7a (38
+          entries) | ms=382 | output=sha256:59d0ce2653fc94be bytes=302 | at=2026-08-31T02:55:41Z</code>.
+          The PATH fingerprint is there because a command that passes on your machine and fails in
+          CI is usually a different PATH, not a different bug.</p>
+
           <div class="stat-row">
             <div class="stat"><b>35</b><span>tests, all passing, no network</span></div>
             <div class="stat"><b>8</b><span>Copilot Studio probes</span></div>
