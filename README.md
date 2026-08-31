@@ -117,7 +117,7 @@ child agents, MCP tools and knowledge under the same `componenttype`, so
 ```bash
 git clone https://github.com/RagnarPitla/Agent-Receipts.git
 cd Agent-Receipts
-node tests/run.mjs            # 35 tests, no network, no credentials
+node tests/run.mjs            # 37 tests, no network, no credentials
 ```
 
 In your own project:
@@ -269,13 +269,13 @@ Node 20 or newer. Zero runtime dependencies, and CI fails if any appear.
 
 ## This repository runs its own ledger
 
-`GATES.md` at the root is real, not a sample. Twelve outcomes, ten of them
-closed by a command whose output is recorded in the file:
+`GATES.md` at the root is real, not a sample. Fourteen outcomes, twelve of
+them closed by a command whose output is recorded in the file:
 
 ```
 $ receipts check GATES.md --approve
 
-  proven 10   attested 0   open 2   self-reported 0   abandoned 0   of 12
+  proven 12   attested 0   open 2   self-reported 0   abandoned 0   of 14
 
   NOT MET
 ```

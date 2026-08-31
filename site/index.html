@@ -421,8 +421,9 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
           </div>
 
           <p>The repository runs this on itself. <code>GATES.md</code> at the root is a real
-          ledger, not an example, and this is what it says today. Ten gates are closed by a
-          command. Two are open, so the run exits 1 and the project is not done.</p>
+          ledger, not an example, and this is what it says today. Twelve gates are closed by
+          a command. Two are open, so the run exits 1 and the project is not done. The gate
+          lines below are an excerpt; the summary counts all fourteen.</p>
 
           <div class="terminal">
 <pre><span class="prompt">$</span> receipts check GATES.md --approve
@@ -436,7 +437,7 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
   [ ] H1: the framing is fair to the platform teams whose work
           this sits beside
 
-  proven 10   attested 0   open 2   self-reported 0   abandoned 0   of 12
+  proven 12   attested 0   open 2   self-reported 0   abandoned 0   of 14
 
   NOT MET</pre>
           </div>
@@ -462,7 +463,7 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
             <div class="stat"><b>0</b><span>write calls in any probe</span></div>
           </div>
 
-          <p class="muted">Every number above comes from a file you can read. 35 is what
+          <p class="muted">Every number above comes from a file you can read. 37 is what
           <code>node tests/run.mjs</code> prints. 8 is the probe table in
           <code>src/probes/index.mjs</code>. 7 is the rule list in <code>src/lint.mjs</code>. 0
           dependencies is the empty <code>dependencies</code> block in <code>package.json</code>.
@@ -641,7 +642,7 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
           <div class="faq-answer"><p>Yes, and this is the fastest way to see what it does. Every probe takes
      <code>--fixture &lt;file.json&gt;</code> and reads a JSON payload instead of an environment.
      Two fixtures ship with the repo: one healthy agent and one that reproduces the push trap.</p>
-     <p>The full test suite - 35 tests - runs with no network and no credentials, which is also why
+     <p>The full test suite - 37 tests - runs with no network and no credentials, which is also why
      it can run in CI on a fork.</p></div>
         </details>
         <details class="faq-item">
@@ -688,7 +689,7 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
         </details>
         <details class="faq-item">
           <summary>What is not finished?<svg class="chevron" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 6l6 6-6 6V6z"/></svg></summary>
-          <div class="faq-answer"><p>The engine, the eight probes, the lint rules and the 35 tests all work today. What does
+          <div class="faq-answer"><p>The engine, the eight probes, the lint rules and the 37 tests all work today. What does
      not exist yet: a recorded run against a live tenant published here as evidence, the Cowork and
      Scout install paths, and a packaged npm release. Those are marked as pending on this page
      rather than described in the present tense, which is the same standard the tool applies to a
