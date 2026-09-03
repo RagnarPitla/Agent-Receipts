@@ -218,6 +218,39 @@
         <figcaption>The command does not change. What changes is that something reads the agent
         afterwards and refuses to take the log's word for it.</figcaption>
       </figure>
+      <h3>The same mistake, counted in a real environment</h3>
+
+      <p>The failure above is not hypothetical and it is not rare. Skills live in Dataverse as
+      <code>componenttype 9</code>, so the obvious way to count them is to count rows of that type.
+      Here is what that returns in a working Copilot Studio environment with
+      64 agents in it, read over the API, read-only.</p>
+
+      <div class="terminal">
+<pre><span class="prompt">$</span> node scripts/live-survey.mjs --env-url $ENV --control-bot $BOT --control-skills 6
+984 row(s) of componenttype 9
+      832    84.6%  AdaptiveDialog
+      116    11.8%  TaskDialog
+       16     1.6%  AgentDialog
+       11     1.1%  InlineAgentSkill
+        9     0.9%  McpTool
+
+  Counting componenttype alone reports 984 skills.
+  Counting kind reports 11.
+  The first number is wrong by a factor of 89, in the flattering direction.</pre>
+      </div>
+
+      <p>984 against 11. The type also holds dialogs, child agents and tools, so a
+      check that counts it is not reading skills, it is reading almost everything except skills,
+      and it will report a comfortable number no matter what you deploy. Only
+      4 of the 64 agents hold a skill at all.</p>
+
+      <p class="muted">That transcript is committed at
+      <code>evidence/live-environment-survey.txt</code> and gate E2 refuses to close unless it
+      carries all three of the survey's own controls. One of them re-counts an agent whose skill
+      count was established by a separate run, because the kind is parsed out of a YAML blob with a
+      regex, and a regex that quietly stops matching would put every row in one bucket and print a
+      very tidy distribution of nothing.</p>
+
     </div>
   </section>
 
@@ -423,9 +456,9 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
           </div>
 
           <p>The repository runs this on itself. <code>GATES.md</code> at the root is a real
-          ledger, not an example, and this is what it says today. Thirteen gates are closed by
+          ledger, not an example, and this is what it says today. Fourteen gates are closed by
           a command. One is open, so the run exits 1 and the project is not done. The gate
-          lines below are an excerpt; the summary counts all fourteen.</p>
+          lines below are an excerpt; the summary counts all fifteen.</p>
 
           <div class="terminal">
 <pre><span class="prompt">$</span> receipts check GATES.md --approve
@@ -438,7 +471,7 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
   [ ] H1: the framing is fair to the platform teams whose work this
           sits beside
 
-  proven 13   attested 0   open 1   self-reported 0   abandoned 0   of 14
+  proven 14   attested 0   open 1   self-reported 0   abandoned 0   of 15
 
   NOT MET</pre>
           </div>

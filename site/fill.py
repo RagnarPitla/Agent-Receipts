@@ -357,6 +357,83 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
 
           """
 
+def survey_facts():
+    """Pull the environment survey numbers out of the artefact that produced them.
+
+    Not typed in. The whole reason this file was rewritten was that numbers
+    typed into a generator go stale somewhere no gate can see, so a number that
+    arrived from a real run gets read back from that run or it does not go on
+    the page at all.
+    """
+    p = SITE.parent / "evidence" / "live-environment-survey.txt"
+    if not p.exists():
+        raise SystemExit(
+            "fill.py needs evidence/live-environment-survey.txt. Produce it with "
+            "scripts/live-survey.mjs, or the page cannot quote a number it has no receipt for."
+        )
+    t = p.read_text(encoding="utf-8")
+    if "SURVEY OK" not in t.splitlines()[0]:
+        raise SystemExit(
+            "fill.py will not publish numbers from a survey that did not pass its own controls."
+        )
+
+    def one(pattern, label):
+        m = re.search(pattern, t, re.M)
+        if not m:
+            raise SystemExit(f"fill.py could not read {label} out of the survey artefact")
+        return m.groups()
+
+    (bots,) = one(r"^\s*(\d+) agent\(s\) in the environment", "the agent count")
+    (rows,) = one(r"^\s*(\d+) row\(s\) of componenttype 9", "the componenttype 9 row count")
+    (skills,) = one(r"^\s*Counting kind reports (\d+)\.", "the skill count")
+    (factor,) = one(r"wrong by a factor of (\d+)", "the overcount factor")
+    with_skills, of_bots = one(r"^\s*(\d+) of (\d+) agent\(s\) hold at least one skill", "the agent coverage")
+    dist = re.findall(r"^\s+(\d+)\s+([\d.]+)%\s+(\w+)$", t, re.M)
+    if len(dist) < 2:
+        raise SystemExit("fill.py read fewer than two kinds from the survey, which means the parse is wrong")
+    return {
+        "bots": bots, "rows": rows, "skills": skills, "factor": factor,
+        "with_skills": with_skills, "of_bots": of_bots, "dist": dist,
+    }
+
+
+def survey_block():
+    f = survey_facts()
+    table = "\n".join(
+        f"{n.rjust(9)}   {pct.rjust(5)}%  {kind}" for n, pct, kind in f["dist"]
+    )
+    return f"""
+      <h3>The same mistake, counted in a real environment</h3>
+
+      <p>The failure above is not hypothetical and it is not rare. Skills live in Dataverse as
+      <code>componenttype 9</code>, so the obvious way to count them is to count rows of that type.
+      Here is what that returns in a working Copilot Studio environment with
+      {f['bots']} agents in it, read over the API, read-only.</p>
+
+      <div class="terminal">
+<pre><span class="prompt">$</span> node scripts/live-survey.mjs --env-url $ENV --control-bot $BOT --control-skills 6
+{f['rows']} row(s) of componenttype 9
+{table}
+
+  Counting componenttype alone reports {f['rows']} skills.
+  Counting kind reports {f['skills']}.
+  The first number is wrong by a factor of {f['factor']}, in the flattering direction.</pre>
+      </div>
+
+      <p>{f['rows']} against {f['skills']}. The type also holds dialogs, child agents and tools, so a
+      check that counts it is not reading skills, it is reading almost everything except skills,
+      and it will report a comfortable number no matter what you deploy. Only
+      {f['with_skills']} of the {f['of_bots']} agents hold a skill at all.</p>
+
+      <p class="muted">That transcript is committed at
+      <code>evidence/live-environment-survey.txt</code> and gate E2 refuses to close unless it
+      carries all three of the survey's own controls. One of them re-counts an agent whose skill
+      count was established by a separate run, because the kind is parsed out of a YAML blob with a
+      regex, and a regex that quietly stops matching would put every row in one bucket and print a
+      very tidy distribution of nothing.</p>
+"""
+
+
 def evidence_line(gate_id):
     """Read one gate's evidence line out of GATES.md.
 
@@ -697,7 +774,7 @@ VALUES = {
     "HERO_SVG": HERO_SVG,
 
     "PROBLEM_HEADING": "The afternoon you lose to a green success message",
-    "PROBLEM_BODY": PROBLEM_BODY,
+    "PROBLEM_BODY": PROBLEM_BODY + survey_block(),
 
     "HOW_LEDE": ("Four steps, and only the first one costs you anything. The rest is a command you "
                  "run and a table you paste."),

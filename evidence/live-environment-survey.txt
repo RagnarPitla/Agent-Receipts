@@ -1,0 +1,39 @@
+SURVEY OK
+
+AGENT RECEIPTS - LIVE ENVIRONMENT SURVEY
+
+environment : https://env-9fff69f60328.crm.dynamics.com
+started     : 2026-09-03T16:20:19.470Z
+mode        : read-only, GET requests only
+
+## 1. what componenttype 9 actually contains
+
+  64 agent(s) in the environment
+  984 row(s) of componenttype 9, read over 2 page(s)
+
+      832   84.6%  AdaptiveDialog
+      116   11.8%  TaskDialog
+       16    1.6%  AgentDialog
+       11    1.1%  InlineAgentSkill
+        9    0.9%  McpTool
+
+  Counting componenttype alone reports 984 skills.
+  Counting kind reports 11.
+  The first number is wrong by a factor of 89, in the flattering direction.
+
+  4 of 64 agent(s) hold at least one skill.
+
+## 2. the controls
+
+  C1 the kind parse discriminates            PASS  (5 distinct kinds)
+  C2 the known agent still has 6 skill(s)     PASS  (survey counted 6)
+  C3 $top truncates and hides that it did     PASS  ($top=200 returned 200 of 984, nextLink absent)
+
+## verdict
+
+  Every control held. The distribution above is what this environment
+  actually contains, not what a broken parse would print.
+
+SURVEY OK
+
+finished    : 2026-09-03T16:20:22.563Z
