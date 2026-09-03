@@ -1,0 +1,70 @@
+PROOF OK
+
+AGENT RECEIPTS - LIVE ENVIRONMENT RUN
+
+environment : https://env-9fff69f60328.crm.dynamics.com
+started     : 2026-09-03T16:07:32.477Z
+mode        : read-only, GET requests only
+
+## 1. the environment is live
+
+  WhoAmI HTTP 200
+  OrganizationId id-7476b2351c7d
+  UserId         id-ef3ce3c337e4
+
+  A recorded run against an environment that never answered is the thing
+  this gate exists to refuse, so the check happens before the probes.
+
+## 2. an agent that should pass
+
+  bot id-8c7fa01a726c
+
+  at least one skill is deployed
+    PROOF OK 6 component(s) of kind InlineAgentSkill, needed at least 1
+         6  AgentDialog
+         1  DefaultFeedbackCollection
+         6  InlineAgentSkill
+         2  KnowledgeSourceConfiguration
+         1  McpTool
+         1  TaskDialog
+
+## 3. the discrimination control
+
+  bot id-2a46e8eeb78e
+
+  Same probe, same environment, same credentials, an agent that genuinely has
+  no skills. If this returns PASS the probe is not reading anything and every
+  green above is meaningless.
+
+  the same probe must say no here
+    PROOF FAIL 0 component(s) of kind InlineAgentSkill, needed at least 1
+        13  AdaptiveDialog
+        25  EvaluationData
+         1  EvaluationSet
+         1  GptComponentMetadata
+         1  TaskDialog
+
+## 4. a second probe, on the same two agents
+
+  harness of the positive agent
+    PROOF OK harness is "github-copilot", expected "github-copilot"
+      Detected from the recognizer name in the bot configuration.
+      CLICopilotRecognizer -> github-copilot (the harness that supports skills).
+      GenerativeAIRecognizer -> standard.
+      Neither name is documented by Microsoft, so "unknown" fails rather than guesses.
+  harness of the control agent
+    PROOF FAIL harness is "standard", expected "github-copilot"
+      Detected from the recognizer name in the bot configuration.
+      CLICopilotRecognizer -> github-copilot (the harness that supports skills).
+      GenerativeAIRecognizer -> standard.
+      Neither name is documented by Microsoft, so "unknown" fails rather than guesses.
+
+## verdict
+
+  Every probe returned a definite verdict against a live environment, the
+  positive case passed, and the control failed on the same data. The probes
+  discriminate here.
+
+PROOF OK
+
+finished    : 2026-09-03T16:07:34.007Z
