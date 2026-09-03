@@ -8,9 +8,11 @@
 
   Every number on this page was read off a real run, and every citation is in
   docs/sources.md along with the claims I could not verify and therefore did
-  not make. The one honest gap - no recorded run against a live tenant yet -
-  is marked pending in the proof section rather than hidden, which is the
-  standard this tool applies to a ticked checkbox.
+  not make. The gate counts and the ledger block come from `receipts status`
+  at build time rather than being typed in, so the page cannot go on reporting
+  a state the ledger has left behind. The one gap that remains, H1, is a human
+  attestation and is marked open in the proof section rather than hidden,
+  which is the standard this tool applies to a ticked checkbox.
 
   Do not hand-edit index.html. Content lives in site/fill.py; run it to
   regenerate index.html from this template.
@@ -380,7 +382,7 @@
             </li>
             <li class="is-pending">
               <span class="key">live</span>
-              <span class="name">no run against a real tenant is recorded here yet</span>
+              <span class="name">no run against a real tenant is recorded in this example</span>
               <span class="meta">not yet done</span>
             </li>
           </ul>
@@ -421,54 +423,37 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
           </div>
 
           <p>The repository runs this on itself. <code>GATES.md</code> at the root is a real
-          ledger, not an example, and this is what it says today. Twelve gates are closed by
-          a command. Two are open, so the run exits 1 and the project is not done. The gate
+          ledger, not an example, and this is what it says today. Thirteen gates are closed by
+          a command. One is open, so the run exits 1 and the project is not done. The gate
           lines below are an excerpt; the summary counts all fourteen.</p>
 
           <div class="terminal">
 <pre><span class="prompt">$</span> receipts check GATES.md --approve
+  [x] G1: a ticked box with no evidence is counted as unmet, not as done
   [x] G2: a deploy that reports success and creates nothing is caught
-  [x] R2: it works from a clean clone with nothing installed
-  [x] S1: no probe can write to an environment
-  [x] S3: an approval store inside the repository is refused
-  [x] L2: the published page is valid and still matches its generator
-  [ ] E1: the probes have been run against a live Copilot Studio
-          environment and the transcript published
-  [ ] H1: the framing is fair to the platform teams whose work
-          this sits beside
+  [x] G3: every shape of a check that cannot fail is still flagged
+  [x] G4: a gate that is already ticked is re-run, so a stale pass
+          cannot survive
+  [x] G5: a gate that could not be run is never reported as met
+  [ ] H1: the framing is fair to the platform teams whose work this
+          sits beside
 
-  proven 12   attested 0   open 2   self-reported 0   abandoned 0   of 14
+  proven 13   attested 0   open 1   self-reported 0   abandoned 0   of 14
 
   NOT MET</pre>
           </div>
 
-          <p><strong>E1 is the honest gap.</strong> Every probe is covered by an offline fixture,
-          and those fixtures encode Dataverse shapes read from documentation and from observed
-          exports. No run against a live tenant has been recorded and published yet. That gate
-          stays open until one is, because closing it with a tick and no evidence is the exact
-          failure this was built to catch. If the page claimed otherwise you would have no reason
-          to believe anything else on it.</p>
+          <p><strong>H1 is the honest gap.</strong> It is not closed by a command,
+          so it is not counted as proven. Leaving that gate open costs a green tick and buys the
+          only thing that makes the rest of the page worth reading.</p>
 
           <p class="muted">Each closed gate carries what the run actually saw. G2's evidence line
-          reads <code>proven | exit=0 | expect=matched | shell=/bin/sh | path=bb1a299c0c7a (38
-          entries) | ms=382 | output=sha256:59d0ce2653fc94be bytes=302 | at=2026-08-31T02:55:41Z</code>.
+          reads <code>proven | exit=0 | expect=matched | shell=/bin/sh | path=95519a159100 (33 entries) | output=sha256:59d0ce2653fc94be bytes=302</code>.
           The PATH fingerprint is there because a command that passes on your machine and fails in
-          CI is usually a different PATH, not a different bug.</p>
-
-          <div class="stat-row">
-            <div class="stat"><b>37</b><span>tests, all passing, no network</span></div>
-            <div class="stat"><b>8</b><span>Copilot Studio probes</span></div>
-            <div class="stat"><b>7</b><span>always-passing check patterns caught</span></div>
-            <div class="stat"><b>0</b><span>runtime dependencies</span></div>
-            <div class="stat"><b>0</b><span>write calls in any probe</span></div>
-          </div>
-
-          <p class="muted">Every number above comes from a file you can read. 37 is what
-          <code>node tests/run.mjs</code> prints. 8 is the probe table in
-          <code>src/probes/index.mjs</code>. 7 is the rule list in <code>src/lint.mjs</code>. 0
-          dependencies is the empty <code>dependencies</code> block in <code>package.json</code>.
-          The last 0 is a grep for POST, PATCH, PUT and DELETE across <code>src/probes/</code>,
-          which is the claim most worth checking yourself before you point this at a tenant.</p>
+          CI is usually a different PATH, not a different bug. The stored line also carries a
+          duration and a timestamp, which this page drops: they move on every run while the output
+          hash does not. Re-running a check is not the same as a result changing, and a page that
+          confused the two would have to be rebuilt every time nothing happened.</p>
         </div>
       </div>
     </div>

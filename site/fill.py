@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Fill the landing page template. Every number here was read off a real run;
-see the verify block in the repo README before changing one."""
+"""Fill the landing page template.
+
+The numbers describing this repository's own ledger are read from
+`receipts status` at build time, not typed in. They used to be typed in, and
+the page went on claiming twelve proven and two open, and that no live-tenant
+run existed, after both had stopped being true."""
 
 import pathlib
 import re
+import subprocess
 import sys
+from html import escape as html_escape
 
 SITE = pathlib.Path(__file__).resolve().parent
 TPL = SITE.parent / "tools" / "index.template.html"
@@ -203,11 +209,119 @@ DEMO_ROWS = """<li class="is-main">
             </li>
             <li class="is-pending">
               <span class="key">live</span>
-              <span class="name">no run against a real tenant is recorded here yet</span>
+              <span class="name">no run against a real tenant is recorded in this example</span>
               <span class="meta">not yet done</span>
             </li>"""
 
-PROOF_BODY = """<p>That is real output from <code>receipts status</code>, not a mock-up. Gate D1 was
+def ledger_status():
+    """Ask the tool for the ledger state instead of reimplementing its parser here.
+
+    A second parser is a second thing that can disagree with the first, and the
+    page would then be able to report a state the tool never produced. `status`
+    executes nothing, so it is safe to run during a build.
+    """
+    r = subprocess.run(
+        ["node", "bin/receipts.mjs", "status", "GATES.md"],
+        cwd=SITE.parent, capture_output=True, text=True, timeout=120,
+    )
+    text = r.stdout
+    m = re.search(
+        r"proven (\d+)\s+attested (\d+)\s+open (\d+)\s+self-reported (\d+)\s+abandoned (\d+)\s+of (\d+)",
+        text,
+    )
+    if not m:
+        raise SystemExit(
+            "fill.py could not read the ledger summary from `receipts status`.\n"
+            "Refusing to build a page with numbers nobody checked.\n"
+            f"stdout was:\n{text[:600]}\nstderr:\n{r.stderr[:400]}"
+        )
+    proven, attested, opened, selfrep, abandoned, total = (int(x) for x in m.groups())
+    gates = re.findall(r"^\s+\[([x !~])\] ([A-Z]\d+): (.+)$", text, re.M)
+    return {
+        "proven": proven, "attested": attested, "open": opened,
+        "self_reported": selfrep, "abandoned": abandoned, "total": total,
+        "summary": m.group(0),
+        "gates": [{"mark": g[0], "id": g[1], "title": g[2].strip()} for g in gates],
+        "verdict": "MET" if "\n  MET" in text else "NOT MET",
+    }
+
+
+WORDS = ("zero one two three four five six seven eight nine ten eleven twelve "
+         "thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty").split()
+
+
+def word(n):
+    return WORDS[n] if n < len(WORDS) else str(n)
+
+
+def proof_body():
+    """Build the section that reports this repository's own ledger.
+
+    Every number below comes from `receipts status`. The previous version of this
+    function had them typed in, and when gate E1 was closed the page went on
+    saying twelve proven, two open, and "no run against a live tenant has been
+    recorded", which by then was the opposite of the truth.
+    """
+    st = ledger_status()
+    closed = st["proven"]
+    still_open = st["open"] + st["self_reported"]
+
+    shown = [g for g in st["gates"] if g["mark"] == "x"][:5]
+    shown += [g for g in st["gates"] if g["mark"] != "x"]
+
+    def line(g):
+        mark = {"x": "[x]", " ": "[ ]", "!": "[!]", "~": "[~]"}[g["mark"]]
+        title = g["title"]
+        if len(title) > 62:
+            head, _, tail = title[:62].rpartition(" ")
+            return (f"  {mark} {g['id']}: {html_escape(head)}\n"
+                    f"          {html_escape(tail + title[62:])}")
+        return f"  {mark} {g['id']}: {html_escape(title)}"
+
+    rows = "\n".join(line(g) for g in shown)
+
+    open_ids = [g["id"] for g in st["gates"] if g["mark"] != "x"]
+    open_phrase = " and ".join(open_ids) if open_ids else "none"
+
+    if open_ids:
+        exits = (f"{word(still_open).capitalize()} "
+                 f"{'is' if still_open == 1 else 'are'} open, so the run exits 1 "
+                 f"and the project is not done.")
+    else:
+        exits = "None are open."
+
+    gap = GAP_CLOSED if not open_ids else GAP_OPEN.format(
+        ids=open_phrase,
+        which="that gate" if len(open_ids) == 1 else "those gates",
+    )
+
+    return PROOF_HEAD + f"""<p>The repository runs this on itself. <code>GATES.md</code> at the root is a real
+          ledger, not an example, and this is what it says today. {word(closed).capitalize()} gates are closed by
+          a command. {exits} The gate
+          lines below are an excerpt; the summary counts all {word(st['total'])}.</p>
+
+          <div class="terminal">
+<pre><span class="prompt">$</span> receipts check GATES.md --approve
+{rows}
+
+  {st['summary']}
+
+  {st['verdict']}</pre>
+          </div>
+
+          {gap}
+""" + PROOF_TAIL_TPL.format(g2=html_escape(evidence_line("G2")))
+
+
+GAP_OPEN = """<p><strong>{ids} is the honest gap.</strong> It is not closed by a command,
+          so it is not counted as proven. Leaving {which} open costs a green tick and buys the
+          only thing that makes the rest of the page worth reading.</p>"""
+
+GAP_CLOSED = """<p>Every gate in the file is now closed by a command that was run, and the
+          evidence line under each one records what that run saw.</p>"""
+
+
+PROOF_HEAD = """<p>That is real output from <code>receipts status</code>, not a mock-up. Gate D1 was
           ticked. Its evidence line still read <code>pending</code>, so the ledger reports it as
           unmet and names it self-reported, and the whole run exits 1.</p>
 
@@ -241,55 +355,48 @@ PROOF FAIL 2 skill(s) named in the ledger are not on the agent
       &lt;- push reported success; the component does not exist</pre>
           </div>
 
-          <p>The repository runs this on itself. <code>GATES.md</code> at the root is a real
-          ledger, not an example, and this is what it says today. Twelve gates are closed by
-          a command. Two are open, so the run exits 1 and the project is not done. The gate
-          lines below are an excerpt; the summary counts all fourteen.</p>
+          """
 
-          <div class="terminal">
-<pre><span class="prompt">$</span> receipts check GATES.md --approve
-  [x] G2: a deploy that reports success and creates nothing is caught
-  [x] R2: it works from a clean clone with nothing installed
-  [x] S1: no probe can write to an environment
-  [x] S3: an approval store inside the repository is refused
-  [x] L2: the published page is valid and still matches its generator
-  [ ] E1: the probes have been run against a live Copilot Studio
-          environment and the transcript published
-  [ ] H1: the framing is fair to the platform teams whose work
-          this sits beside
+def evidence_line(gate_id):
+    """Read one gate's evidence line out of GATES.md.
 
-  proven 12   attested 0   open 2   self-reported 0   abandoned 0   of 14
+    This was pasted in by hand and drifted: it still quoted a PATH fingerprint
+    and a timestamp from a run two days older than the one the page reported.
 
-  NOT MET</pre>
-          </div>
+    The capture is `[^\\n]+` rather than `.+` on purpose. With re.S in force a
+    greedy `.+` runs past the end of the line and swallows the rest of the
+    file, which is how the first version of this put forty lines of ledger, and
+    an absolute home directory path, onto a public page.
+    """
+    text = (SITE.parent / "GATES.md").read_text(encoding="utf-8")
+    m = re.search(rf"^- \[.\] {gate_id}:.*?^\s+EVIDENCE: ([^\n]+)$", text, re.M | re.S)
+    if not m:
+        raise SystemExit(f"fill.py could not find an EVIDENCE line for {gate_id} in GATES.md")
+    line = m.group(1).strip()
+    # The cwd is whoever happened to run it. It proves nothing and it is somebody's
+    # home directory, so it does not belong on a published page.
+    line = re.sub(r"\s*\|\s*cwd=[^|]+", "", line)
+    # Drop the fields that change on every run without the result changing.
+    # Publishing them made this page disagree with its own generator after any
+    # second run: ms= and at= moved, output=sha256: did not. That is churn, not
+    # a change, and a page that cannot tell the two apart has no business
+    # making the argument this one makes.
+    line = re.sub(r"\s*\|\s*ms=[^|]+", "", line)
+    line = re.sub(r"\s*\|\s*at=[^|]+", "", line)
+    line = re.sub(r"\s*\|\s*", " | ", line)
+    if "\n" in line or len(line) > 300:
+        raise SystemExit(f"fill.py read an implausible evidence line for {gate_id}: {line[:120]!r}")
+    return line
 
-          <p><strong>E1 is the honest gap.</strong> Every probe is covered by an offline fixture,
-          and those fixtures encode Dataverse shapes read from documentation and from observed
-          exports. No run against a live tenant has been recorded and published yet. That gate
-          stays open until one is, because closing it with a tick and no evidence is the exact
-          failure this was built to catch. If the page claimed otherwise you would have no reason
-          to believe anything else on it.</p>
 
+PROOF_TAIL_TPL = """
           <p class="muted">Each closed gate carries what the run actually saw. G2's evidence line
-          reads <code>proven | exit=0 | expect=matched | shell=/bin/sh | path=bb1a299c0c7a (38
-          entries) | ms=382 | output=sha256:59d0ce2653fc94be bytes=302 | at=2026-08-31T02:55:41Z</code>.
+          reads <code>{g2}</code>.
           The PATH fingerprint is there because a command that passes on your machine and fails in
-          CI is usually a different PATH, not a different bug.</p>
-
-          <div class="stat-row">
-            <div class="stat"><b>37</b><span>tests, all passing, no network</span></div>
-            <div class="stat"><b>8</b><span>Copilot Studio probes</span></div>
-            <div class="stat"><b>7</b><span>always-passing check patterns caught</span></div>
-            <div class="stat"><b>0</b><span>runtime dependencies</span></div>
-            <div class="stat"><b>0</b><span>write calls in any probe</span></div>
-          </div>
-
-          <p class="muted">Every number above comes from a file you can read. 37 is what
-          <code>node tests/run.mjs</code> prints. 8 is the probe table in
-          <code>src/probes/index.mjs</code>. 7 is the rule list in <code>src/lint.mjs</code>. 0
-          dependencies is the empty <code>dependencies</code> block in <code>package.json</code>.
-          The last 0 is a grep for POST, PATCH, PUT and DELETE across <code>src/probes/</code>,
-          which is the claim most worth checking yourself before you point this at a tenant.</p>"""
+          CI is usually a different PATH, not a different bug. The stored line also carries a
+          duration and a timestamp, which this page drops: they move on every run while the output
+          hash does not. Re-running a check is not the same as a result changing, and a page that
+          confused the two would have to be rebuilt every time nothing happened.</p>"""
 
 COMPARE_CARDS = """<div class="compare-card">
           <h3>Compared with Copilot Studio's built-in evaluation</h3>
@@ -610,7 +717,7 @@ VALUES = {
     "DEMO_INTRO": ("Four gates and one honest gap. The first row was ticked by hand and is reported "
                    "as unmet anyway."),
     "DEMO_ROWS": DEMO_ROWS,
-    "PROOF_BODY": PROOF_BODY,
+    "PROOF_BODY": proof_body(),
 
     "COMPARE_HEADING": "Where this sits next to what Microsoft already ships",
     "COMPARE_CARDS": COMPARE_CARDS,
